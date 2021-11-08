@@ -20,7 +20,7 @@ external interface Customer {
 }
 ```
 
-## Creation & Migration
+### Creation & Migration
 
 Creating a [`Database`] and handling migrations are done together with the [`openDatabase`] function. The database name and
 desired version are passed in as arguments. If the desired version and the current version match, then the callback is
@@ -45,7 +45,7 @@ its subclasses)**. Of course, it is also okay to call `suspend` functions which 
 This constraint is forced by the design of IndexedDB auto-committing transactions when it detects no remaining callbacks,
 and failure to adhere to this can cause `TransactionInactiveError` to be thrown.
 
-## Writing Data
+### Writing Data
 
 To add data to the [`Database`] created above, open a [`WriteTransaction`], and then open the [`ObjectStore`]. Use
 [`WriteTransaction.add`] to guarantee insert-only behavior, and use  [`WriteTransaction.put`] for insert-or-update.
@@ -62,7 +62,7 @@ database.writeTransaction("customers") {
 }
 ```
 
-## Reading Data
+### Reading Data
 
 To read data, open a [`Transaction`], and then open the [`ObjectStore`]. Use [`Transaction.get`] and [`Transaction.getAll`]
 to retrieve single items and retrieve bulk items, respectively.
@@ -78,7 +78,7 @@ val bill = database.transaction("customers") {
 assertEquals("Bill", bill.name)
 ```
 
-### Key Ranges and Indices
+#### Key Ranges and Indices
 
 With an [`ObjectStore`] you can query on a previously created [`Index`] instead of the primary key. This is especially
 useful in combination with key ranges, and together more powerful queries can be constructed.
@@ -94,7 +94,7 @@ val donna = database.transaction("customers") {
 assertEquals("Donna", donna.name)
 ```
 
-### Cursors
+#### Cursors
 
 These have not yet been implemented.
 
@@ -155,3 +155,5 @@ limitations under the License.
 [//]: # (External references)
 [IndexedDB]: https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
 [Using IndexedDB]: https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB
+[//]: # (Images)
+[badge-js]: http://img.shields.io/badge/platform-js-F8DB5D.svg?style=flat
