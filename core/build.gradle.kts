@@ -16,7 +16,6 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(":external"))
                 api(kotlinx.coroutines())
             }
         }
@@ -30,6 +29,7 @@ kotlin {
 
         val jsMain by getting {
             dependencies {
+                implementation(project(":external"))
                 implementation(wrappers.extensions())
             }
         }
