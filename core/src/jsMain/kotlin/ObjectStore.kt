@@ -6,7 +6,7 @@ import com.juul.indexeddb.external.IDBObjectStore
 
 public class ObjectStore internal constructor(
     internal val objectStore: IDBObjectStore,
-) : Queryable {
+) : Queryable() {
     override fun requestGet(key: Key): Request<dynamic> =
         Request(objectStore.get(key.toJs()))
 

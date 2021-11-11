@@ -4,7 +4,9 @@ import com.juul.indexeddb.external.IDBCursor
 import com.juul.indexeddb.external.IDBCursorWithValue
 import com.juul.indexeddb.external.IDBIndex
 
-public class Index internal constructor(internal val index: IDBIndex) : Queryable {
+public class Index internal constructor(
+    internal val index: IDBIndex,
+) : Queryable() {
     override fun requestGet(key: Key): Request<dynamic> =
         Request(index.get(key.toJs()))
 
