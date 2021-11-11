@@ -40,7 +40,8 @@ val database = openDatabase("your-database-name", 1) { database, oldVersion, new
 
 Transactions, such as the lambda block of `openData`, are handled as `suspend` functions but with an important constraint:
 **you must not call any `suspend` functions except for those provided by this library and scoped on [`Transaction`] (and
-its subclasses)**. Of course, it is also okay to call `suspend` functions which only suspend by calling other legal functions.
+its subclasses), and flow operations on the flow returned by [`openCursor`]**. Of course, it is also okay to call
+`suspend` functions which only suspend by calling other legal functions.
 
 This constraint is forced by the design of IndexedDB auto-committing transactions when it detects no remaining callbacks,
 and failure to adhere to this can cause `TransactionInactiveError` to be thrown.
@@ -57,8 +58,10 @@ not be executed concurrently.
 ```kotlin
 database.writeTransaction("customers") {
     val store = objectStore("customers")
+    store.add(jsObject<Customer> { ssn = "333-33-3333"; name = "Alice"; age = 33; email = "alice@company.com" })
     store.add(jsObject<Customer> { ssn = "444-44-4444"; name = "Bill"; age = 35; email = "bill@company.com" })
-    store.add(jsObject<Customer> { ssn = "555-55-5555"; name = "Donna"; age = 32; email = "donna@home.org" })
+    store.add(jsObject<Customer> { ssn = "555-55-5555"; name = "Charlie"; age = 29; email = "charlie@home.org" })
+    store.add(jsObject<Customer> { ssn = "666-66-6666"; name = "Donna"; age = 31; email = "donna@home.org" })
 }
 ```
 
@@ -89,14 +92,34 @@ included in `bound(arrayOf(2, 2), arrayOf(4, 4))`.
 
 ```kotlin
 val donna = database.transaction("customers") {
-    objectStore("customers").index("age").get(upperBound(34)) as Customer
+    objectStore("customers").index("age").get(bound(30, 32)) as Customer
 }
 assertEquals("Donna", donna.name)
 ```
 
-#### Cursors
+### Cursors
 
-These have not yet been implemented.
+Cursors are excellent for optimizing complex queries. With either [`ObjectStore`] or [`Index`], call
+[`Transaction.openCursor`] to return a `Flow` of [`CursorWithValue`] which emits once per row matching the query. The
+returned flow is cold and properly handles early collection termination. To get the value of the row currently pointed
+at by the cursor, call [`CursorWithValue.value`].
+
+As an example we can find the first customer alphabetically with
+an age under 32:
+
+```kotlin
+val charlie = database.transaction("customers") {
+    objectStore("customers")
+        .index("name")
+        .openCursor()
+        .map { it.value as Customer }
+        .first { it.age < 32 }
+}
+assertEquals("Charlie", charlie.name)
+```
+
+Cursors can also be used to update or delete the value at the current index by calling [`WriteTransaction.update`] and
+[`WriteTransaction.delete`], respectively.
 
 ## Setup
 
@@ -137,16 +160,21 @@ limitations under the License.
 ```
 
 [//]: # (Internal class and member references)
+[`CursorWithValue`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/-cursor-with-value/index.html
+[`CursorWithValue.value`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/-cursor-with-value/value.html
 [`Database`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/-database/index.html
 [`Index`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/-index/index.html
 [`ObjectStore`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/-object-store/index.html
 [`Transaction`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/-transaction/index.html
 [`Transaction.get`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/-transaction/get.html
 [`Transaction.getAll`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/-transaction/get-all.html
+[`Transaction.openCursor`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/-transaction/open-cursor.html
 [`VersionChangeTransaction`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/-version-change-transaction/index.html
 [`WriteTransaction`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/-write-transaction/index.html
 [`WriteTransaction.add`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/-write-transaction/add.html
+[`WriteTransaction.delete`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/-write-transaction/delete.html
 [`WriteTransaction.put`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/-write-transaction/put.html
+[`WriteTransaction.update`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/-write-transaction/update.html
 [//]: # (Internal top-level function references)
 [`bound`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/bound.html
 [`lowerBound`]: https://juullabs.github.io/indexeddb/core/core/com.juul.indexeddb/lower-bound.html

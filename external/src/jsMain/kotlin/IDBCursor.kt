@@ -11,4 +11,7 @@ public external interface IDBCursor {
 /** https://developer.mozilla.org/en-US/docs/Web/API/IDBCursorWithValue */
 public external interface IDBCursorWithValue : IDBCursor {
     public val value: dynamic
+
+    public fun delete(): IDBRequest<dynamic>
+    public fun update(value: dynamic): IDBRequest<dynamic>
 }

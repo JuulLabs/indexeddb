@@ -1,7 +1,15 @@
 package com.juul.indexeddb
 
+import com.juul.indexeddb.external.IDBCursor
+import com.juul.indexeddb.external.IDBCursorWithValue
+import com.juul.indexeddb.external.IDBRequest
 import com.juul.indexeddb.external.IDBTransaction
 import kotlinext.js.jsObject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import org.w3c.dom.events.Event
 
 public open class Transaction internal constructor(
     internal val transaction: IDBTransaction,
@@ -30,13 +38,64 @@ public open class Transaction internal constructor(
         }
     }
 
-    public suspend fun Queryable.getAll(key: Key? = null): Array<dynamic> {
-        val request = requestGetAll(key).request
+    public suspend fun Queryable.getAll(query: Key? = null): Array<dynamic> {
+        val request = requestGetAll(query).request
         return request.onNextEvent("success", "error") { event ->
             when (event.type) {
                 "error" -> throw ErrorEventException(event)
                 else -> request.result
             }
+        }
+    }
+
+    public suspend fun Queryable.openCursor(
+        query: Key? = null,
+        direction: Cursor.Direction = Cursor.Direction.Next,
+    ): Flow<CursorWithValue> = openCursorImpl(
+        query,
+        direction,
+        open = this::requestOpenCursor,
+        wrap = ::CursorWithValue
+    )
+
+    public suspend fun Queryable.openKeyCursor(
+        query: Key? = null,
+        direction: Cursor.Direction = Cursor.Direction.Next,
+    ): Flow<Cursor> = openCursorImpl(
+        query,
+        direction,
+        open = this::requestOpenKeyCursor,
+        wrap = ::Cursor
+    )
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private suspend fun <T : Cursor, U : IDBCursor> openCursorImpl(
+        query: Key?,
+        direction: Cursor.Direction,
+        open: (Key?, Cursor.Direction) -> Request<U?>,
+        wrap: (U) -> T,
+    ): Flow<T> = callbackFlow {
+        val request = open(query, direction).request
+        val onSuccess: (Event) -> Unit = { event ->
+            @Suppress("UNCHECKED_CAST")
+            val cursor = (event.target as IDBRequest<U?>).result
+            if (cursor != null) {
+                val result = trySend(wrap(cursor))
+                when {
+                    result.isSuccess -> cursor.`continue`()
+                    result.isFailure -> channel.close(IllegalStateException("Send failed. Did you suspend illegally?"))
+                    result.isClosed -> channel.close()
+                }
+            } else {
+                channel.close()
+            }
+        }
+        val onError: (Event) -> Unit = { event -> channel.close(ErrorEventException(event)) }
+        request.addEventListener("success", onSuccess)
+        request.addEventListener("error", onError)
+        awaitClose {
+            request.removeEventListener("success", onSuccess)
+            request.removeEventListener("error", onError)
         }
     }
 
@@ -96,6 +155,26 @@ public open class WriteTransaction internal constructor(
 
     public suspend fun ObjectStore.clear() {
         val request = objectStore.clear()
+        request.onNextEvent("success", "error") { event ->
+            when (event.type) {
+                "error" -> throw ErrorEventException(event)
+                else -> Unit
+            }
+        }
+    }
+
+    public suspend fun CursorWithValue.delete() {
+        val request = cursor.delete()
+        request.onNextEvent("success", "error") { event ->
+            when (event.type) {
+                "error" -> throw ErrorEventException(event)
+                else -> Unit
+            }
+        }
+    }
+
+    public suspend fun CursorWithValue.update(value: dynamic) {
+        val request = cursor.update(value)
         request.onNextEvent("success", "error") { event ->
             when (event.type) {
                 "error" -> throw ErrorEventException(event)
