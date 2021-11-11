@@ -1,10 +1,8 @@
 package com.juul.indexeddb
 
 import kotlinext.js.jsObject
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.toList
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

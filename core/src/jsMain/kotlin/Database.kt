@@ -71,7 +71,6 @@ public class Database internal constructor(internal val database: IDBDatabase) {
         result
     }
 
-
     /**
      * Inside the [action] block, you must not call any `suspend` functions except for those provided by this library
      * and scoped on [Transaction] (and its subclasses), and flow operations on the flows returns by [Transaction.openCursor]

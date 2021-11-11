@@ -1,7 +1,6 @@
 package com.juul.indexeddb
 
 import com.juul.indexeddb.external.IDBCursor
-import com.juul.indexeddb.external.IDBCursorWithValue
 import com.juul.indexeddb.external.IDBRequest
 import com.juul.indexeddb.external.IDBTransaction
 import kotlinext.js.jsObject
