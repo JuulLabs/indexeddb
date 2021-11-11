@@ -40,8 +40,8 @@ val database = openDatabase("your-database-name", 1) { database, oldVersion, new
 
 Transactions, such as the lambda block of `openData`, are handled as `suspend` functions but with an important constraint:
 **you must not call any `suspend` functions except for those provided by this library and scoped on [`Transaction`] (and
-its subclasses), and flow operations on the flow returned by [`openCursor`]**. Of course, it is also okay to call
-`suspend` functions which only suspend by calling other legal functions.
+its subclasses), and flow operations on the flow returned by [`Transaction.openCursor`]**. Of course, it is also okay to
+call `suspend` functions which only suspend by calling other legal functions.
 
 This constraint is forced by the design of IndexedDB auto-committing transactions when it detects no remaining callbacks,
 and failure to adhere to this can cause `TransactionInactiveError` to be thrown.
