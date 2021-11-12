@@ -2,6 +2,15 @@ package com.juul.indexeddb
 
 import com.juul.indexeddb.external.IDBKeyRange
 import kotlinext.js.jsObject
+import kotlin.js.Date
+
+private fun Array<dynamic>.validateKeyTypes() {
+    for (value in this) when (value) {
+        null, is String, is Date, is Double, is ByteArray, is IDBKeyRange -> continue
+        is Array<*> -> (value as Array<dynamic>).validateKeyTypes()
+        else -> error("Illegal key: expected string, date, float, binary blob, or array of those types, but got $value.")
+    }
+}
 
 public object AutoIncrement {
     internal fun toJs(): dynamic = jsObject { autoIncrement = true }
@@ -11,7 +20,7 @@ public class KeyPath private constructor(
     private val paths: Array<String>,
 ) {
     init {
-        require(paths.isNotEmpty())
+        require(paths.isNotEmpty()) { "A key path must have at least one member." }
     }
 
     public constructor(path: String, vararg morePaths: String) : this(arrayOf(path, *morePaths))
@@ -24,7 +33,8 @@ public class Key private constructor(
     private val values: Array<dynamic>,
 ) {
     init {
-        require(values.isNotEmpty())
+        require(values.isNotEmpty()) { "A key must have at least one member." }
+        values.validateKeyTypes()
     }
 
     public constructor(value: dynamic, vararg moreValues: dynamic) : this(arrayOf(value, *moreValues))
