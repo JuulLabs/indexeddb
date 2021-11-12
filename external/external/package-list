@@ -7,6 +7,8 @@ $dokka.location:com.juul.indexeddb.external/IDBCursor/continue/#/PointingToDecla
 $dokka.location:com.juul.indexeddb.external/IDBCursor/key/#/PointingToDeclaration/external/com.juul.indexeddb.external/-i-d-b-cursor/key.html
 $dokka.location:com.juul.indexeddb.external/IDBCursor/primaryKey/#/PointingToDeclaration/external/com.juul.indexeddb.external/-i-d-b-cursor/primary-key.html
 $dokka.location:com.juul.indexeddb.external/IDBCursorWithValue///PointingToDeclaration/external/com.juul.indexeddb.external/-i-d-b-cursor-with-value/index.html
+$dokka.location:com.juul.indexeddb.external/IDBCursorWithValue/delete/#/PointingToDeclaration/external/com.juul.indexeddb.external/-i-d-b-cursor-with-value/delete.html
+$dokka.location:com.juul.indexeddb.external/IDBCursorWithValue/update/#kotlin.Any/PointingToDeclaration/external/com.juul.indexeddb.external/-i-d-b-cursor-with-value/update.html
 $dokka.location:com.juul.indexeddb.external/IDBCursorWithValue/value/#/PointingToDeclaration/external/com.juul.indexeddb.external/-i-d-b-cursor-with-value/value.html
 $dokka.location:com.juul.indexeddb.external/IDBDatabase///PointingToDeclaration/external/com.juul.indexeddb.external/-i-d-b-database/index.html
 $dokka.location:com.juul.indexeddb.external/IDBDatabase/IDBDatabase/#/PointingToDeclaration/external/com.juul.indexeddb.external/-i-d-b-database/-i-d-b-database.html
