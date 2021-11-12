@@ -8,13 +8,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * Inside the [initialize] block, it is important to write code which does not suspend EXCEPT for the following safe calls:
- * - [Transaction.get]
- * - [Transaction.getAll]
- * - [WriteTransaction.add]
- * - [WriteTransaction.put]
- * - [WriteTransaction.delete]
- * - [WriteTransaction.clear]
+ * Inside the [initialize] block, you must not call any `suspend` functions except for:
+ * - those provided by this library and scoped on [Transaction] (and its subclasses)
+ * - flow operations on the flows returns by [Transaction.openCursor] and [Transaction.openKeyCursor]
+ * - `suspend` functions composed entirely of other legal functions
  */
 public suspend fun openDatabase(
     name: String,
@@ -46,12 +43,24 @@ public suspend fun openDatabase(
     return database
 }
 
+public suspend fun deleteDatabase(name: String) {
+    val factory = checkNotNull(window.indexedDB) { "Your browser doesn't support IndexedDB." }
+    val request = factory.deleteDatabase(name)
+    request.onNextEvent("success", "error") { event ->
+        when (event.type) {
+            "error" -> throw ErrorEventException(event)
+            else -> null
+        }
+    }
+}
+
 public class Database internal constructor(internal val database: IDBDatabase) {
 
     /**
-     * Inside the [action] block, it is important to write code which does not suspend EXCEPT for the following safe calls:
-     * - [Transaction.get]
-     * - [Transaction.getAll]
+     * Inside the [action] block, you must not call any `suspend` functions except for:
+     * - those provided by this library and scoped on [Transaction] (and its subclasses)
+     * - flow operations on the flows returns by [Transaction.openCursor] and [Transaction.openKeyCursor]
+     * - `suspend` functions composed entirely of other legal functions
      */
     public suspend fun <T> transaction(
         vararg store: String,
@@ -65,13 +74,10 @@ public class Database internal constructor(internal val database: IDBDatabase) {
     }
 
     /**
-     * Inside the [action] block, it is important to write code which does not suspend EXCEPT for the following safe calls:
-     * - [Transaction.get]
-     * - [Transaction.getAll]
-     * - [WriteTransaction.add]
-     * - [WriteTransaction.put]
-     * - [WriteTransaction.delete]
-     * - [WriteTransaction.clear]
+     * Inside the [action] block, you must not call any `suspend` functions except for:
+     * - those provided by this library and scoped on [Transaction] (and its subclasses)
+     * - flow operations on the flows returns by [Transaction.openCursor] and [Transaction.openKeyCursor]
+     * - `suspend` functions composed entirely of other legal functions
      */
     public suspend fun <T> writeTransaction(
         vararg store: String,
@@ -82,5 +88,9 @@ public class Database internal constructor(internal val database: IDBDatabase) {
         val result = transaction.action()
         transaction.awaitCompletion()
         result
+    }
+
+    public fun close() {
+        database.close()
     }
 }
