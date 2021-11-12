@@ -8,9 +8,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
- * Inside the [initialize] block, you must not call any `suspend` functions except for those provided by this library
- * and scoped on [Transaction] (and its subclasses), and flow operations on the flows returns by [Transaction.openCursor]
- * and [Transaction.openKeyCursor].
+ * Inside the [initialize] block, you must not call any `suspend` functions except for:
+ * - those provided by this library and scoped on [Transaction] (and its subclasses)
+ * - flow operations on the flows returns by [Transaction.openCursor] and [Transaction.openKeyCursor]
+ * - `suspend` functions composed entirely of other legal functions
  */
 public suspend fun openDatabase(
     name: String,
@@ -56,9 +57,10 @@ public suspend fun deleteDatabase(name: String) {
 public class Database internal constructor(internal val database: IDBDatabase) {
 
     /**
-     * Inside the [action] block, you must not call any `suspend` functions except for those provided by this library
-     * and scoped on [Transaction] (and its subclasses), and flow operations on the flows returns by [Transaction.openCursor]
-     * and [Transaction.openKeyCursor].
+     * Inside the [action] block, you must not call any `suspend` functions except for:
+     * - those provided by this library and scoped on [Transaction] (and its subclasses)
+     * - flow operations on the flows returns by [Transaction.openCursor] and [Transaction.openKeyCursor]
+     * - `suspend` functions composed entirely of other legal functions
      */
     public suspend fun <T> transaction(
         vararg store: String,
@@ -72,9 +74,10 @@ public class Database internal constructor(internal val database: IDBDatabase) {
     }
 
     /**
-     * Inside the [action] block, you must not call any `suspend` functions except for those provided by this library
-     * and scoped on [Transaction] (and its subclasses), and flow operations on the flows returns by [Transaction.openCursor]
-     * and [Transaction.openKeyCursor].
+     * Inside the [action] block, you must not call any `suspend` functions except for:
+     * - those provided by this library and scoped on [Transaction] (and its subclasses)
+     * - flow operations on the flows returns by [Transaction.openCursor] and [Transaction.openKeyCursor]
+     * - `suspend` functions composed entirely of other legal functions
      */
     public suspend fun <T> writeTransaction(
         vararg store: String,
