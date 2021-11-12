@@ -6,9 +6,8 @@ import kotlin.js.Date
 
 private fun Array<dynamic>.validateKeyTypes() {
     for (value in this) when (value) {
-        is String, is Date, is Double, is ByteArray -> continue
+        null, is String, is Date, is Double, is ByteArray, is IDBKeyRange -> continue
         is Array<*> -> (value as Array<dynamic>).validateKeyTypes()
-        is IDBKeyRange -> continue
         else -> error("Illegal key: expected string, date, float, binary blob, or array of those types, but got $value.")
     }
 }

@@ -52,4 +52,9 @@ public class KeyTests {
     public fun constructor_withRange_completes() {
         Key(IDBKeyRange.upperBound("foobar", false))
     }
+
+    @Test
+    public fun constructor_withNull_completes() {
+        Key(null)
+    }
 }
