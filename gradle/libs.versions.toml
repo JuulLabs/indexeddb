@@ -1,6 +1,6 @@
 [versions]
 coroutines = "1.5.2"
-extensions = "1.0.1-pre.264-kotlin-1.5.31"
+extensions = "1.0.1-pre.264-kotlin-1.6.10"
 kotlin = "1.5.31"
 
 [libraries]
