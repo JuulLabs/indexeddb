@@ -1,7 +1,7 @@
 [versions]
 coroutines = "1.5.2"
-extensions = "1.0.1-pre.264-kotlin-1.6.10"
-kotlin = "1.5.31"
+extensions = "1.0.1-pre.290-kotlin-1.6.10"
+kotlin = "1.6.10"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
