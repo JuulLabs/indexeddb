@@ -6,10 +6,10 @@ buildscript {
 }
 
 plugins {
-    kotlin("multiplatform") version "1.5.31" apply false
-    id("org.jmailen.kotlinter") version "3.4.4" apply false
-    id("com.vanniktech.maven.publish") version "0.15.1" apply false
-    id("org.jetbrains.dokka") version "1.4.32"
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlinter) apply false
+    alias(libs.plugins.maven.publish) apply false
+    alias(libs.plugins.dokka)
 }
 
 tasks.withType<org.jetbrains.dokka.gradle.DokkaMultiModuleTask>().configureEach {
