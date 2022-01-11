@@ -1,6 +1,6 @@
 package com.juul.indexeddb
 
-import kotlinext.js.jsObject
+import kotlinext.js.jso
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlin.test.Test
@@ -35,10 +35,10 @@ class Samples {
 
         database.writeTransaction("customers") {
             val store = objectStore("customers")
-            store.add(jsObject<Customer> { ssn = "333-33-3333"; name = "Alice"; age = 33; email = "alice@company.com" })
-            store.add(jsObject<Customer> { ssn = "444-44-4444"; name = "Bill"; age = 35; email = "bill@company.com" })
-            store.add(jsObject<Customer> { ssn = "555-55-5555"; name = "Charlie"; age = 29; email = "charlie@home.org" })
-            store.add(jsObject<Customer> { ssn = "666-66-6666"; name = "Donna"; age = 31; email = "donna@home.org" })
+            store.add(jso<Customer> { ssn = "333-33-3333"; name = "Alice"; age = 33; email = "alice@company.com" })
+            store.add(jso<Customer> { ssn = "444-44-4444"; name = "Bill"; age = 35; email = "bill@company.com" })
+            store.add(jso<Customer> { ssn = "555-55-5555"; name = "Charlie"; age = 29; email = "charlie@home.org" })
+            store.add(jso<Customer> { ssn = "666-66-6666"; name = "Donna"; age = 31; email = "donna@home.org" })
         }
 
         val bill = database.transaction("customers") {
