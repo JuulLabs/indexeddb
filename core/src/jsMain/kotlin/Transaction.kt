@@ -3,7 +3,7 @@ package com.juul.indexeddb
 import com.juul.indexeddb.external.IDBCursor
 import com.juul.indexeddb.external.IDBRequest
 import com.juul.indexeddb.external.IDBTransaction
-import kotlinext.js.jsObject
+import kotlinext.js.jso
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -197,5 +197,5 @@ public class VersionChangeTransaction internal constructor(
     }
 
     public fun ObjectStore.createIndex(name: String, keyPath: KeyPath, unique: Boolean): Index =
-        Index(objectStore.createIndex(name, keyPath.toUnwrappedJs(), jsObject { this.unique = unique }))
+        Index(objectStore.createIndex(name, keyPath.toUnwrappedJs(), jso { this.unique = unique }))
 }

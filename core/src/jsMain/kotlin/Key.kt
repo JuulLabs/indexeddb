@@ -1,7 +1,7 @@
 package com.juul.indexeddb
 
 import com.juul.indexeddb.external.IDBKeyRange
-import kotlinext.js.jsObject
+import kotlinext.js.jso
 import kotlin.js.Date
 
 private fun Array<dynamic>.validateKeyTypes() {
@@ -13,7 +13,7 @@ private fun Array<dynamic>.validateKeyTypes() {
 }
 
 public object AutoIncrement {
-    internal fun toJs(): dynamic = jsObject { autoIncrement = true }
+    internal fun toJs(): dynamic = jso { autoIncrement = true }
 }
 
 public class KeyPath private constructor(
@@ -25,7 +25,7 @@ public class KeyPath private constructor(
 
     public constructor(path: String, vararg morePaths: String) : this(arrayOf(path, *morePaths))
 
-    internal fun toWrappedJs(): dynamic = jsObject { keyPath = if (paths.size == 1) paths[0] else paths }
+    internal fun toWrappedJs(): dynamic = jso { keyPath = if (paths.size == 1) paths[0] else paths }
     internal fun toUnwrappedJs(): dynamic = if (paths.size == 1) paths[0] else paths
 }
 
