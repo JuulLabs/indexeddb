@@ -1,7 +1,7 @@
 package com.juul.indexeddb
 
 import com.juul.indexeddb.external.IDBKeyRange
-import kotlinext.js.jsObject
+import kotlinext.js.jso
 import kotlin.js.Date
 import kotlin.test.Test
 import kotlin.test.assertFails
@@ -10,12 +10,12 @@ public class KeyTests {
 
     @Test
     public fun constructor_withObjectType_shouldFail() {
-        assertFails { Key(jsObject()) }
+        assertFails { Key(jso()) }
     }
 
     @Test
     public fun constructor_withArrayOfObjectType_shouldFail() {
-        assertFails { Key(arrayOf<dynamic>(jsObject())) }
+        assertFails { Key(arrayOf<dynamic>(jso())) }
     }
 
     @Test
