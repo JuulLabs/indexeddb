@@ -1,6 +1,6 @@
 [versions]
 coroutines = "1.6.0"
-extensions = "1.0.1-pre.298-kotlin-1.6.10"
+extensions = "1.0.1-pre.299-kotlin-1.6.10"
 kotlin = "1.6.10"
 
 [libraries]
