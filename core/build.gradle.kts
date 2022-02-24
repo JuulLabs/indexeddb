@@ -30,7 +30,6 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation(project(":external"))
-                implementation(libs.kotlin.extensions)
             }
         }
 

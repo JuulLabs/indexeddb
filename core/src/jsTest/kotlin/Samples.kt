@@ -1,6 +1,5 @@
 package com.juul.indexeddb
 
-import kotlinext.js.jso
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlin.test.Test
