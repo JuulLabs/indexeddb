@@ -1,7 +1,6 @@
 package com.juul.indexeddb
 
 import com.juul.indexeddb.external.IDBKeyRange
-import kotlinext.js.jso
 import kotlin.js.Date
 import kotlin.test.Test
 import kotlin.test.assertFails
