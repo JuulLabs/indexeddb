@@ -21,7 +21,7 @@ public suspend fun openDatabase(
         oldVersion: Int,
         newVersion: Int,
     ) -> Unit,
-): Database {
+): Database = withContext(Dispatchers.Unconfined) {
     val factory = checkNotNull(window.indexedDB) { "Your browser doesn't support IndexedDB." }
     val request = factory.open(name, version)
     val versionChangeEvent = request.onNextEvent("success", "upgradeneeded", "error", "blocked") { event ->
@@ -32,15 +32,13 @@ public suspend fun openDatabase(
             else -> null
         }
     }
-    val database = Database(request.result)
-    if (versionChangeEvent != null) {
-        withContext(Dispatchers.Unconfined) {
+    Database(request.result).also { database ->
+        if (versionChangeEvent != null) {
             val transaction = VersionChangeTransaction(checkNotNull(request.transaction))
             transaction.initialize(database, versionChangeEvent.oldVersion, versionChangeEvent.newVersion)
             transaction.awaitCompletion()
         }
     }
-    return database
 }
 
 public suspend fun deleteDatabase(name: String) {
