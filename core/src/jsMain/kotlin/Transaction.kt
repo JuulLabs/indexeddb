@@ -53,7 +53,7 @@ public open class Transaction internal constructor(
         query,
         direction,
         open = this::requestOpenCursor,
-        wrap = ::CursorWithValue
+        wrap = ::CursorWithValue,
     )
 
     public suspend fun Queryable.openKeyCursor(
@@ -63,7 +63,7 @@ public open class Transaction internal constructor(
         query,
         direction,
         open = this::requestOpenKeyCursor,
-        wrap = ::Cursor
+        wrap = ::Cursor,
     )
 
     @OptIn(ExperimentalCoroutinesApi::class)
