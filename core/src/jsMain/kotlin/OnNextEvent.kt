@@ -6,7 +6,7 @@ import org.w3c.dom.events.EventTarget
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-/** Subscribes to events matching [names], unsubscribing immediately before [action] is called. */
+/** Subscribes to events matching [types], unsubscribing immediately before [action] is called. */
 internal suspend fun <T> EventTarget.onNextEvent(
     vararg types: String,
     action: (Event) -> T,
