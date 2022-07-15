@@ -1,5 +1,5 @@
 [versions]
-coroutines = "1.6.3"
+coroutines = "1.6.4"
 kotlin = "1.7.10"
 
 [libraries]
@@ -9,4 +9,4 @@ coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", ve
 dokka = { id = "org.jetbrains.dokka", version = "1.7.10" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinter = { id = "org.jmailen.kotlinter", version = "3.11.1" }
-maven-publish = { id = "com.vanniktech.maven.publish", version = "0.20.0" }
+maven-publish = { id = "com.vanniktech.maven.publish", version = "0.21.0" }
