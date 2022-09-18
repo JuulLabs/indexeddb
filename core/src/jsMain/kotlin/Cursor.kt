@@ -16,7 +16,7 @@ public open class Cursor internal constructor(
         Next("next"),
         NextUnique("nextunique"),
         Previous("prev"),
-        PreviousUnique("prevunique")
+        PreviousUnique("prevunique"),
     }
 }
 
