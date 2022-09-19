@@ -2,9 +2,6 @@ name: CI
 on:
   pull_request:
 
-env:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -32,14 +29,12 @@ jobs:
           set -o xtrace
           if [ ! -z "${{ secrets.SIGNING_KEY }}" ]; then
             ./gradlew \
-            --no-parallel \
             -PVERSION_NAME="unspecified" \
             -PsigningInMemoryKey="${{ secrets.SIGNING_KEY }}" \
             -PsigningInMemoryKeyPassword="${{ secrets.SIGNING_PASSWORD }}" \
             publishToMavenLocal
           else
             ./gradlew \
-            --no-parallel \
             -PVERSION_NAME="unspecified-SNAPSHOT" \
             publishToMavenLocal
           fi
