@@ -4,10 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>com.juul.indexeddb.external</title>
 <link href="../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
-const savedDarkMode = storage ? JSON.parse(storage) : false
-if(savedDarkMode === true){
-    document.getElementsByTagName("html")[0].classList.add("theme-dark")
-}</script>
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
 <script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../styles/style.css" rel="Stylesheet">
 <link href="../../styles/jetbrains-mono.css" rel="Stylesheet">
@@ -18,7 +26,8 @@ if(savedDarkMode === true){
 <script type="text/javascript" src="../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../scripts/prism.js" async></script></head>
+<script type="text/javascript" src="../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
 <body>
 <div class="navigation-wrapper" id="navigation-wrapper">
     <div id="leftToggler"><span class="icon-toggler"></span></div>
@@ -38,9 +47,9 @@ if(savedDarkMode === true){
     </div>
     <div id="main">
 <div class="main-content" id="content" pageids="external::com.juul.indexeddb.external////PointingToDeclaration//-1590404598">
-  <div class="breadcrumbs"><a href="../index.html">external</a><span class="delimiter">/</span><a href="index.html">com.juul.indexeddb.external</a></div>
+  <div class="breadcrumbs"><a href="../index.html">external</a><span class="delimiter">/</span><span class="current">com.juul.indexeddb.external</span></div>
   <div class="cover ">
-    <h1 class="cover"><span><span>Package</span></span> <span>com.</span><wbr><span>juul.</span><wbr><span>indexeddb.</span><wbr><span>external</span></h1>
+    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button><button class="section-tab" data-togglable="Properties">Properties</button></div>
@@ -56,7 +65,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-cursor/index.html">IDBCursor</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBCursor</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-cursor/index.html">IDBCursor</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBCursor</p></div></div></div>
               </div>
             </div>
           </div>
@@ -71,7 +80,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-cursor-with-value/index.html">IDBCursorWithValue</a> : <a href="-i-d-b-cursor/index.html">IDBCursor</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBCursorWithValue</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-cursor-with-value/index.html">IDBCursorWithValue</a> : <a href="-i-d-b-cursor/index.html">IDBCursor</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBCursorWithValue</p></div></div></div>
               </div>
             </div>
           </div>
@@ -86,7 +95,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-database/index.html">IDBDatabase</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/org.w3c.dom.events/-event-target/index.html">EventTarget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-database/index.html">IDBDatabase</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/org.w3c.dom.events/-event-target/index.html">EventTarget</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase</p></div></div></div>
               </div>
             </div>
           </div>
@@ -101,7 +110,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-factory/index.html">IDBFactory</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBFactory</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-factory/index.html">IDBFactory</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBFactory</p></div></div></div>
               </div>
             </div>
           </div>
@@ -116,7 +125,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-index/index.html">IDBIndex</a> : <a href="-i-d-b-queryable/index.html">IDBQueryable</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBIndex</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-index/index.html">IDBIndex</a> : <a href="-i-d-b-queryable/index.html">IDBQueryable</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBIndex</p></div></div></div>
               </div>
             </div>
           </div>
@@ -131,7 +140,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-key-range/index.html">IDBKeyRange</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBKeyRange</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-key-range/index.html">IDBKeyRange</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBKeyRange</p></div></div></div>
               </div>
             </div>
           </div>
@@ -146,7 +155,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-object-store/index.html">IDBObjectStore</a> : <a href="-i-d-b-queryable/index.html">IDBQueryable</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-object-store/index.html">IDBObjectStore</a> : <a href="-i-d-b-queryable/index.html">IDBQueryable</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore</p></div></div></div>
               </div>
             </div>
           </div>
@@ -161,7 +170,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-open-d-b-request/index.html">IDBOpenDBRequest</a> : <a href="-i-d-b-request/index.html">IDBRequest</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-i-d-b-database/index.html">IDBDatabase</a><span class="token operator">&gt; </span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBOpenDBRequest</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-open-d-b-request/index.html">IDBOpenDBRequest</a> : <a href="-i-d-b-request/index.html">IDBRequest</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-i-d-b-database/index.html">IDBDatabase</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBOpenDBRequest</p></div></div></div>
               </div>
             </div>
           </div>
@@ -176,7 +185,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-queryable/index.html">IDBQueryable</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Pseudo-interface for the shared query functionality between <a href="-i-d-b-index/index.html">IDBIndex</a> and <a href="-i-d-b-object-store/index.html">IDBObjectStore</a>.</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-queryable/index.html">IDBQueryable</a></div><div class="brief "><p class="paragraph">Pseudo-interface for the shared query functionality between <a href="-i-d-b-index/index.html">IDBIndex</a> and <a href="-i-d-b-object-store/index.html">IDBObjectStore</a>.</p></div></div></div>
               </div>
             </div>
           </div>
@@ -191,7 +200,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-request/index.html">IDBRequest</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-i-d-b-request/index.html">T</a><span class="token operator">&gt;</span> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/org.w3c.dom.events/-event-target/index.html">EventTarget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBRequest</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-request/index.html">IDBRequest</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="-i-d-b-request/index.html">T</a><span class="token operator">&gt;</span> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/org.w3c.dom.events/-event-target/index.html">EventTarget</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBRequest</p></div></div></div>
               </div>
             </div>
           </div>
@@ -206,7 +215,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-transaction/index.html">IDBTransaction</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/org.w3c.dom.events/-event-target/index.html">EventTarget</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-transaction/index.html">IDBTransaction</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/org.w3c.dom.events/-event-target/index.html">EventTarget</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction</p></div></div></div>
               </div>
             </div>
           </div>
@@ -221,7 +230,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-version-change-event/index.html">IDBVersionChangeEvent</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/org.w3c.dom.events/-event/index.html">Event</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBVersionChangeEvent</p></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-version-change-event/index.html">IDBVersionChangeEvent</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/org.w3c.dom.events/-event/index.html">Event</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBVersionChangeEvent</p></div></div></div>
               </div>
             </div>
           </div>
@@ -238,7 +247,7 @@ if(savedDarkMode === true){
                 </span></span></div>
             <div>
               <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><a data-name="1773245860%2FProperties%2F-1590404598" anchor-label="indexedDB" id="1773245860%2FProperties%2F-1590404598" data-filterable-set=":external:dokkaHtmlPartial/jsMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/org.w3c.dom/-window/index.html">Window</a><span class="token punctuation">.</span><a href="indexed-d-b.html">indexedDB</a><span class="token operator">: </span><a href="-i-d-b-factory/index.html">IDBFactory</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><a data-name="1773245860%2FProperties%2F-1590404598" anchor-label="indexedDB" id="1773245860%2FProperties%2F-1590404598" data-filterable-set=":external:dokkaHtmlPartial/jsMain"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/org.w3c.dom/-window/index.html">Window</a><span class="token punctuation">.</span><a href="indexed-d-b.html">indexedDB</a><span class="token operator">: </span><a href="-i-d-b-factory/index.html">IDBFactory</a><span class="token operator">?</span></div></div></div>
               </div>
             </div>
           </div>
