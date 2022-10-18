@@ -18,4 +18,8 @@ public class ObjectStore internal constructor(
 
     override fun requestOpenKeyCursor(query: Key?, direction: Cursor.Direction): Request<IDBCursor?> =
         Request(objectStore.openKeyCursor(query?.toJs(), direction.constant))
+
+    override fun requestCount(query: Key?): Request<Int> =
+        Request(objectStore.count(query?.toJs()))
+
 }

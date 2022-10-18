@@ -58,5 +58,15 @@ class Samples {
                 .first { it.age < 32 }
         }
         assertEquals("Charlie", charlie.name)
+
+        val count = database.transaction("customers") {
+            objectStore("customers").count()
+        }
+        assertEquals(4, count)
+
+        val countBelowThirtyTwo = database.transaction("customers") {
+            objectStore("customers").index("age").count(upperBound(32))
+        }
+        assertEquals(2, countBelowThirtyTwo)
     }
 }

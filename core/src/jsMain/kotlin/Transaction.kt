@@ -97,6 +97,18 @@ public open class Transaction internal constructor(
         }
     }
 
+
+    public suspend fun Queryable.count(query: Key? = null): Int {
+        val request = requestCount(query).request
+        return request.onNextEvent("success", "error") { event ->
+            when (event.type) {
+                "error" -> throw ErrorEventException(event)
+                else -> request.result
+            }
+        }
+    }
+
+
     public fun ObjectStore.index(name: String): Index =
         Index(objectStore.index(name))
 }
