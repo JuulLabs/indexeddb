@@ -21,5 +21,4 @@ public class Index internal constructor(
 
     override fun requestCount(query: Key?): Request<Int> =
         Request(index.count(query?.toJs()))
-
 }

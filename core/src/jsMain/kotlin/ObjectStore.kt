@@ -21,5 +21,4 @@ public class ObjectStore internal constructor(
 
     override fun requestCount(query: Key?): Request<Int> =
         Request(objectStore.count(query?.toJs()))
-
 }
