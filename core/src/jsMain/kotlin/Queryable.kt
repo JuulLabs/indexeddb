@@ -8,4 +8,5 @@ public sealed class Queryable {
     internal abstract fun requestGetAll(query: Key?): Request<Array<dynamic>>
     internal abstract fun requestOpenCursor(query: Key?, direction: Cursor.Direction): Request<IDBCursorWithValue?>
     internal abstract fun requestOpenKeyCursor(query: Key?, direction: Cursor.Direction): Request<IDBCursor?>
+    internal abstract fun requestCount(query: Key?): Request<Int>
 }

@@ -18,4 +18,7 @@ public class Index internal constructor(
 
     override fun requestOpenKeyCursor(query: Key?, direction: Cursor.Direction): Request<IDBCursor?> =
         Request(index.openKeyCursor(query?.toJs(), direction.constant))
+
+    override fun requestCount(query: Key?): Request<Int> =
+        Request(index.count(query?.toJs()))
 }
