@@ -49,9 +49,11 @@ public open class Transaction internal constructor(
     public suspend fun Queryable.openCursor(
         query: Key? = null,
         direction: Cursor.Direction = Cursor.Direction.Next,
+        cursorStart: CursorStart? = null,
     ): Flow<CursorWithValue> = openCursorImpl(
         query,
         direction,
+        cursorStart,
         open = this::requestOpenCursor,
         wrap = ::CursorWithValue,
     )
@@ -59,9 +61,11 @@ public open class Transaction internal constructor(
     public suspend fun Queryable.openKeyCursor(
         query: Key? = null,
         direction: Cursor.Direction = Cursor.Direction.Next,
+        cursorStart: CursorStart? = null,
     ): Flow<Cursor> = openCursorImpl(
         query,
         direction,
+        cursorStart,
         open = this::requestOpenKeyCursor,
         wrap = ::Cursor,
     )
@@ -70,14 +74,19 @@ public open class Transaction internal constructor(
     private suspend fun <T : Cursor, U : IDBCursor> openCursorImpl(
         query: Key?,
         direction: Cursor.Direction,
+        cursorStart: CursorStart?,
         open: (Key?, Cursor.Direction) -> Request<U?>,
         wrap: (U) -> T,
     ): Flow<T> = callbackFlow {
+        var cursorStartAction = cursorStart
         val request = open(query, direction).request
         val onSuccess: (Event) -> Unit = { event ->
             @Suppress("UNCHECKED_CAST")
             val cursor = (event.target as IDBRequest<U?>).result
-            if (cursor != null) {
+            if (cursorStartAction != null && cursor != null) {
+                cursorStartAction?.apply(cursor)
+                cursorStartAction = null
+            } else if (cursor != null) {
                 val result = trySend(wrap(cursor))
                 when {
                     result.isSuccess -> cursor.`continue`()

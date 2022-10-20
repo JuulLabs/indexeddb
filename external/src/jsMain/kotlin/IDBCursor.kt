@@ -6,6 +6,12 @@ public external interface IDBCursor {
     public val primaryKey: dynamic
 
     public fun `continue`()
+
+    public fun advance(count: Int)
+
+    public fun `continue`(key: dynamic)
+
+    public fun continuePrimaryKey(key: dynamic, primaryKey: dynamic)
 }
 
 /** https://developer.mozilla.org/en-US/docs/Web/API/IDBCursorWithValue */

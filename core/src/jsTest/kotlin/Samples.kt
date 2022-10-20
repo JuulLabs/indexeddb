@@ -2,6 +2,7 @@ package com.juul.indexeddb
 
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -68,5 +69,25 @@ class Samples {
             objectStore("customers").index("age").count(upperBound(32))
         }
         assertEquals(2, countBelowThirtyTwo)
+
+        val skipTwoYoungest = database.transaction("customers") {
+            objectStore("customers")
+                .index("age")
+                .openCursor(cursorStart = CursorStart.Advance(2))
+                .map { it.value as Customer }
+                .map { it.name }
+                .toList()
+        }
+        assertEquals(listOf("Alice", "Bill"), skipTwoYoungest)
+
+        val skipUntil33 = database.transaction("customers") {
+            objectStore("customers")
+                .index("age")
+                .openCursor(cursorStart = CursorStart.Continue(Key(33)))
+                .map { it.value as Customer }
+                .map { it.name }
+                .toList()
+        }
+        assertEquals(listOf("Alice", "Bill"), skipUntil33)
     }
 }
