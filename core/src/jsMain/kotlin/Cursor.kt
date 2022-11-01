@@ -12,6 +12,22 @@ public open class Cursor internal constructor(
     public val primaryKey: dynamic
         get() = cursor.primaryKey
 
+    public fun `continue`() {
+        cursor.`continue`()
+    }
+
+    public fun advance(count: Int) {
+        cursor.advance(count)
+    }
+
+    public fun `continue`(key: Key) {
+        cursor.`continue`(key.toJs())
+    }
+
+    public fun continuePrimaryKey(key: Key, primaryKey: Key) {
+        cursor.continuePrimaryKey(key.toJs(), primaryKey.toJs())
+    }
+
     public enum class Direction(internal val constant: String) {
         Next("next"),
         NextUnique("nextunique"),
