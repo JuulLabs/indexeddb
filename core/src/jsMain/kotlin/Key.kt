@@ -59,5 +59,5 @@ public fun bound(
 ): Key = Key(IDBKeyRange.bound(x, y, lowerOpen, upperOpen))
 
 public fun only(
-    z: dynamic
+    z: dynamic,
 ): Key = Key(IDBKeyRange.only(z))
