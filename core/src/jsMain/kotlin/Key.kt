@@ -57,3 +57,7 @@ public fun bound(
     lowerOpen: Boolean = false,
     upperOpen: Boolean = false,
 ): Key = Key(IDBKeyRange.bound(x, y, lowerOpen, upperOpen))
+
+public fun only(
+    z: dynamic,
+): Key = Key(IDBKeyRange.only(z))
