@@ -54,7 +54,7 @@ class Samples {
         val charlie = database.transaction("customers") {
             objectStore("customers")
                 .index("name")
-                .openCursor()
+                .openCursor(autoContinue = true)
                 .map { it.value as Customer }
                 .first { it.age < 32 }
         }
@@ -73,7 +73,7 @@ class Samples {
         val skipTwoYoungest = database.transaction("customers") {
             objectStore("customers")
                 .index("age")
-                .openCursor(cursorStart = CursorStart.Advance(2))
+                .openCursor(cursorStart = CursorStart.Advance(2), autoContinue = true)
                 .map { it.value as Customer }
                 .map { it.name }
                 .toList()
@@ -83,7 +83,7 @@ class Samples {
         val skipUntil33 = database.transaction("customers") {
             objectStore("customers")
                 .index("age")
-                .openCursor(cursorStart = CursorStart.Continue(Key(33)))
+                .openCursor(cursorStart = CursorStart.Continue(Key(33)), autoContinue = true)
                 .map { it.value as Customer }
                 .map { it.name }
                 .toList()

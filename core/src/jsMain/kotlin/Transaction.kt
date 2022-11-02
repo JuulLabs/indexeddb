@@ -3,7 +3,6 @@ package com.juul.indexeddb
 import com.juul.indexeddb.external.IDBCursor
 import com.juul.indexeddb.external.IDBRequest
 import com.juul.indexeddb.external.IDBTransaction
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -46,37 +45,71 @@ public open class Transaction internal constructor(
         }
     }
 
+    @Deprecated(
+        "In the future, `autoContinue` will be a required parameter.",
+        ReplaceWith("openCursor(query, direction, cursorStart, autoContinue = true)"),
+    )
     public suspend fun Queryable.openCursor(
         query: Key? = null,
         direction: Cursor.Direction = Cursor.Direction.Next,
         cursorStart: CursorStart? = null,
+    ): Flow<CursorWithValue> = openCursor(
+        query,
+        direction,
+        cursorStart,
+        autoContinue = true,
+    )
+
+    public suspend fun Queryable.openCursor(
+        query: Key? = null,
+        direction: Cursor.Direction = Cursor.Direction.Next,
+        cursorStart: CursorStart? = null,
+        autoContinue: Boolean,
     ): Flow<CursorWithValue> = openCursorImpl(
         query,
         direction,
         cursorStart,
         open = this::requestOpenCursor,
         wrap = ::CursorWithValue,
+        autoContinue,
+    )
+
+    @Deprecated(
+        "In the future, `autoContinue` will be a required parameter.",
+        ReplaceWith("openKeyCursor(query, direction, cursorStart, autoContinue = true)"),
+    )
+    public suspend fun Queryable.openKeyCursor(
+        query: Key? = null,
+        direction: Cursor.Direction = Cursor.Direction.Next,
+        cursorStart: CursorStart? = null,
+    ): Flow<Cursor> = openKeyCursor(
+        query,
+        direction,
+        cursorStart,
+        autoContinue = true,
     )
 
     public suspend fun Queryable.openKeyCursor(
         query: Key? = null,
         direction: Cursor.Direction = Cursor.Direction.Next,
         cursorStart: CursorStart? = null,
+        autoContinue: Boolean,
     ): Flow<Cursor> = openCursorImpl(
         query,
         direction,
         cursorStart,
         open = this::requestOpenKeyCursor,
         wrap = ::Cursor,
+        autoContinue,
     )
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun <T : Cursor, U : IDBCursor> openCursorImpl(
         query: Key?,
         direction: Cursor.Direction,
         cursorStart: CursorStart?,
         open: (Key?, Cursor.Direction) -> Request<U?>,
         wrap: (U) -> T,
+        autoContinue: Boolean,
     ): Flow<T> = callbackFlow {
         var cursorStartAction = cursorStart
         val request = open(query, direction).request
@@ -89,7 +122,7 @@ public open class Transaction internal constructor(
             } else if (cursor != null) {
                 val result = trySend(wrap(cursor))
                 when {
-                    result.isSuccess -> cursor.`continue`()
+                    result.isSuccess -> if (autoContinue) cursor.`continue`()
                     result.isFailure -> channel.close(IllegalStateException("Send failed. Did you suspend illegally?"))
                     result.isClosed -> channel.close()
                 }
