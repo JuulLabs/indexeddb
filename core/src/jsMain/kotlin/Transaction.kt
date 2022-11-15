@@ -158,37 +158,78 @@ public open class WriteTransaction internal constructor(
 ) : Transaction(transaction) {
 
     /**
-     * Adds a new item to the database. If an item with the same key already exists, this will fail.
+     * Adds a new item to the database using an in-line or auto-incrementing key. If an item with the same
+     * key already exists, this will fail.
      *
      * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
      *
      * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
      * doesn't mangle, prefix, or otherwise mess with your field names.
      */
-    public suspend fun ObjectStore.add(item: dynamic) {
+    public suspend fun ObjectStore.add(item: dynamic): dynamic {
         val request = objectStore.add(item)
-        request.onNextEvent("success", "error") { event ->
+        return request.onNextEvent("success", "error") { event ->
             when (event.type) {
                 "error" -> throw ErrorEventException(event)
-                else -> Unit
+                else -> request.result
             }
         }
     }
 
     /**
-     * Adds an item to, or updates an item in, the database. If an item with the same key already exists, this will replace that item.
+     * Adds a new item to the database using an explicit out-of-line key. If an item with the same key already
+     * exists, this will fail.
      *
      * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
      *
      * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
      * doesn't mangle, prefix, or otherwise mess with your field names.
      */
-    public suspend fun ObjectStore.put(item: dynamic) {
-        val request = objectStore.put(item)
-        request.onNextEvent("success", "error") { event ->
+    public suspend fun ObjectStore.add(item: dynamic, key: Key): dynamic {
+        val request = objectStore.add(item, key.toJs())
+        return request.onNextEvent("success", "error") { event ->
             when (event.type) {
                 "error" -> throw ErrorEventException(event)
-                else -> Unit
+                else -> request.result
+            }
+        }
+    }
+
+    /**
+     * Adds an item to or updates an item in the database using an in-line or auto-incrementing key. If an item
+     * with the same key already exists, this will replace that item. Note that with auto-incrementing keys a new
+     * item will always be inserted.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.put(item: dynamic): dynamic {
+        val request = objectStore.put(item)
+        return request.onNextEvent("success", "error") { event ->
+            when (event.type) {
+                "error" -> throw ErrorEventException(event)
+                else -> request.result
+            }
+        }
+    }
+
+    /**
+     * Adds an item to or updates an item in the database using an explicit out-of-line key. If an item with the
+     * same key already exists, this will replace that item.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.put(item: dynamic, key: Key): dynamic {
+        val request = objectStore.put(item, key.toJs())
+        return request.onNextEvent("success", "error") { event ->
+            when (event.type) {
+                "error" -> throw ErrorEventException(event)
+                else -> request.result
             }
         }
     }
@@ -237,9 +278,16 @@ public open class WriteTransaction internal constructor(
 public class VersionChangeTransaction internal constructor(
     transaction: IDBTransaction,
 ) : WriteTransaction(transaction) {
+
+    /** Creates an object-store that uses explicit out-of-line keys. */
+    public fun Database.createObjectStore(name: String): ObjectStore =
+        ObjectStore(database.createObjectStore(name))
+
+    /** Creates an object-store that uses in-line keys. */
     public fun Database.createObjectStore(name: String, keyPath: KeyPath): ObjectStore =
         ObjectStore(database.createObjectStore(name, keyPath.toWrappedJs()))
 
+    /** Creates an object-store that uses out-of-line keys with a key-generator. */
     public fun Database.createObjectStore(name: String, autoIncrement: AutoIncrement): ObjectStore =
         ObjectStore(database.createObjectStore(name, autoIncrement.toJs()))
 
