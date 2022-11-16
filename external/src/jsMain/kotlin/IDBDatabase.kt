@@ -8,6 +8,7 @@ public external class IDBDatabase : EventTarget {
     public val version: Int
     public val objectStoreNames: Array<String>
     public fun close()
+    public fun createObjectStore(name: String): IDBObjectStore
     public fun createObjectStore(name: String, options: dynamic): IDBObjectStore
     public fun deleteObjectStore(name: String)
     public fun transaction(storeNames: Array<String>, mode: String): IDBTransaction
