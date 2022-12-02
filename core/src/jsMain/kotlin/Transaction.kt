@@ -3,6 +3,8 @@ package com.juul.indexeddb
 import com.juul.indexeddb.external.IDBCursor
 import com.juul.indexeddb.external.IDBRequest
 import com.juul.indexeddb.external.IDBTransaction
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -60,6 +62,15 @@ public open class Transaction internal constructor(
         autoContinue = true,
     )
 
+    /**
+     * When [autoContinue] is `true`, all values matching the query will emit automatically. It is important
+     * not to suspend in flow collection on _anything_ other than flow operators (such as `.toList`).
+     *
+     * Warning: when [autoContinue] is `false`, callers are responsible for data flow and must call `continue`, `advance`,
+     * or similar explicitly. The returned flow will terminate automatically after `continue` if no more elements
+     * remain. Otherwise, you must call `close` to terminate the flow. Failing to call `continue` or `close`
+     * will result in the flow stalling.
+     */
     public suspend fun Queryable.openCursor(
         query: Key? = null,
         direction: Cursor.Direction = Cursor.Direction.Next,
@@ -89,6 +100,15 @@ public open class Transaction internal constructor(
         autoContinue = true,
     )
 
+    /**
+     * When [autoContinue] is `true`, all values matching the query will emit automatically. It is important
+     * not to suspend in flow collection on _anything_ other than flow operators (such as `.toList`).
+     *
+     * Warning: when [autoContinue] is `false`, callers are responsible for data flow and must call `continue`, `advance`,
+     * or similar explicitly. The returned flow will terminate automatically after `continue` if no more elements
+     * remain. Otherwise, you must call `close` to terminate the flow. Failing to call `continue` or `close`
+     * will result in the flow stalling.
+     */
     public suspend fun Queryable.openKeyCursor(
         query: Key? = null,
         direction: Cursor.Direction = Cursor.Direction.Next,
@@ -108,7 +128,7 @@ public open class Transaction internal constructor(
         direction: Cursor.Direction,
         cursorStart: CursorStart?,
         open: (Key?, Cursor.Direction) -> Request<U?>,
-        wrap: (U) -> T,
+        wrap: (U, SendChannel<*>) -> T,
         autoContinue: Boolean,
     ): Flow<T> = callbackFlow {
         var cursorStartAction = cursorStart
@@ -120,7 +140,7 @@ public open class Transaction internal constructor(
                 cursorStartAction?.apply(cursor)
                 cursorStartAction = null
             } else if (cursor != null) {
-                val result = trySend(wrap(cursor))
+                val result = trySend(wrap(cursor, channel))
                 when {
                     result.isSuccess -> if (autoContinue) cursor.`continue`()
                     result.isFailure -> channel.close(IllegalStateException("Send failed. Did you suspend illegally?"))
