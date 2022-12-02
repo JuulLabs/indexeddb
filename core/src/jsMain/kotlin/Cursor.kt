@@ -2,12 +2,11 @@ package com.juul.indexeddb
 
 import com.juul.indexeddb.external.IDBCursor
 import com.juul.indexeddb.external.IDBCursorWithValue
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.SendChannel
 
 public open class Cursor internal constructor(
     internal open val cursor: IDBCursor,
-    private val channel: SendChannel<*>
+    private val channel: SendChannel<*>,
 ) {
     public val key: dynamic
         get() = cursor.key
@@ -45,7 +44,7 @@ public open class Cursor internal constructor(
 
 public class CursorWithValue internal constructor(
     override val cursor: IDBCursorWithValue,
-    channel: SendChannel<*>
+    channel: SendChannel<*>,
 ) : Cursor(cursor, channel) {
     public val value: dynamic
         get() = cursor.value

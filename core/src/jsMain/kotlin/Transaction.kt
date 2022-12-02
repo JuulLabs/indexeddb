@@ -3,7 +3,6 @@ package com.juul.indexeddb
 import com.juul.indexeddb.external.IDBCursor
 import com.juul.indexeddb.external.IDBRequest
 import com.juul.indexeddb.external.IDBTransaction
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
