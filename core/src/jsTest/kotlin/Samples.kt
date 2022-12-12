@@ -26,6 +26,8 @@ class Samples {
                 store.createIndex("name", KeyPath("name"), unique = false)
                 store.createIndex("age", KeyPath("age"), unique = false)
                 store.createIndex("email", KeyPath("email"), unique = true)
+                store.createIndex("unnecessary_index", KeyPath("unimporatant"), unique = true)
+                store.deleteIndex("unnecessary_index")
             }
         }
         onCleanup {

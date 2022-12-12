@@ -316,4 +316,8 @@ public class VersionChangeTransaction internal constructor(
 
     public fun ObjectStore.createIndex(name: String, keyPath: KeyPath, unique: Boolean): Index =
         Index(objectStore.createIndex(name, keyPath.toUnwrappedJs(), jso { this.unique = unique }))
+
+    public fun ObjectStore.deleteIndex(name: String) {
+        objectStore.deleteIndex(name)
+    }
 }
