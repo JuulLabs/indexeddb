@@ -18,7 +18,12 @@ class InLineKeyObjectStore {
         }
 
         database.writeTransaction("users") {
-            objectStore("users").add(jso { id = "7740f7c4-f889-498a-bc6d-f88dabdcfb9a"; username = "Username" })
+            objectStore("users").add(
+                jso {
+                    id = "7740f7c4-f889-498a-bc6d-f88dabdcfb9a"
+                    username = "Username"
+                },
+            )
         }
 
         val user = database.transaction("users") {
