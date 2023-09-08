@@ -8,7 +8,7 @@ jobs:
   deploy:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: ./gradlew dokkaHtmlMultiModule
       - uses: JamesIves/github-pages-deploy-action@v4
         with:
