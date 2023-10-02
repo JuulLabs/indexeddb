@@ -22,7 +22,8 @@ public suspend fun openDatabase(
         newVersion: Int,
     ) -> Unit,
 ): Database = withContext(Dispatchers.Unconfined) {
-    val factory = checkNotNull(window.indexedDB) { "Your browser doesn't support IndexedDB." }
+    val indexedDB: IDBFactory? = js("self.indexedDB || self.webkitIndexedDB") as? IDBFactory
+    val factory = checkNotNull(indexedDB) { "Your browser doesn't support IndexedDB." }
     val request = factory.open(name, version)
     val versionChangeEvent = request.onNextEvent("success", "upgradeneeded", "error", "blocked") { event ->
         when (event.type) {
