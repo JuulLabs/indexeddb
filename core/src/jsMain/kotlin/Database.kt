@@ -1,8 +1,8 @@
 package com.juul.indexeddb
 
 import com.juul.indexeddb.external.IDBDatabase
-import com.juul.indexeddb.external.IDBVersionChangeEvent
 import com.juul.indexeddb.external.IDBFactory
+import com.juul.indexeddb.external.IDBVersionChangeEvent
 import com.juul.indexeddb.external.indexedDB
 import kotlinx.browser.window
 import kotlinx.coroutines.Dispatchers
