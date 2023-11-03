@@ -12,4 +12,6 @@ public class EventHandlerException(cause: Throwable?, event: Event) : EventExcep
 
 public class ErrorEventException(event: Event) : EventException("An error event was received.", cause = null, event)
 public class OpenBlockedException(public val name: String, event: Event) : EventException("Resource in use: $name.", cause = null, event)
-public class AbortTransactionException(event: Event) : EventException("Transaction aborted while waiting for completion.", cause = null, event)
+public class AbortTransactionException(
+    event: Event,
+) : EventException("Transaction aborted while waiting for completion.", cause = null, event)
