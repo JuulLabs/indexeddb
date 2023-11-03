@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:function-naming")
+
 package com.juul.indexeddb
 
 import com.juul.indexeddb.external.IDBCursor
