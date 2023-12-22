@@ -92,7 +92,7 @@ public class Database internal constructor(internal val database: IDBDatabase) {
         with(transaction) {
             // Force overlapping transactions to not call `action` until prior transactions complete.
             objectStore(store.first())
-                .openCursor(autoContinue = false)
+                .openKeyCursor(autoContinue = false)
                 .collect { it.close() }
         }
         val result = transaction.action()
