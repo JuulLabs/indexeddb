@@ -11,5 +11,5 @@ public external class IDBDatabase : EventTarget {
     public fun createObjectStore(name: String): IDBObjectStore
     public fun createObjectStore(name: String, options: dynamic): IDBObjectStore
     public fun deleteObjectStore(name: String)
-    public fun transaction(storeNames: Array<String>, mode: String): IDBTransaction
+    public fun transaction(storeNames: Array<String>, mode: String, options: dynamic): IDBTransaction
 }

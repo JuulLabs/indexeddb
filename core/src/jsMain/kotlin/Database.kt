@@ -64,10 +64,12 @@ public class Database internal constructor(internal val database: IDBDatabase) {
      */
     public suspend fun <T> transaction(
         vararg store: String,
+        durability: Durability = Durability.Default,
         action: suspend Transaction.() -> T,
     ): T = withContext(Dispatchers.Unconfined) {
-        @Suppress("UNCHECKED_CAST") // What a silly cast. Apparently `vararg` creates `Array<out String>` instead of `Array<String>`
-        val transaction = Transaction(database.transaction(store as Array<String>, "readonly"))
+        val transaction = Transaction(
+            database.transaction(arrayOf(*store), "readonly", transactionOptions(durability)),
+        )
         val result = transaction.action()
         transaction.awaitCompletion()
         result
@@ -81,10 +83,18 @@ public class Database internal constructor(internal val database: IDBDatabase) {
      */
     public suspend fun <T> writeTransaction(
         vararg store: String,
+        durability: Durability = Durability.Default,
         action: suspend WriteTransaction.() -> T,
     ): T = withContext(Dispatchers.Unconfined) {
-        @Suppress("UNCHECKED_CAST") // What a silly cast. Apparently `vararg` creates `Array<out String>` instead of `Array<String>`
-        val transaction = WriteTransaction(database.transaction(store as Array<String>, "readwrite"))
+        val transaction = WriteTransaction(
+            database.transaction(arrayOf(*store), "readwrite", transactionOptions(durability)),
+        )
+        with(transaction) {
+            // Force overlapping transactions to not call `action` until prior transactions complete.
+            objectStore(store.first())
+                .openKeyCursor(autoContinue = false)
+                .collect { it.close() }
+        }
         val result = transaction.action()
         transaction.awaitCompletion()
         result
@@ -93,4 +103,8 @@ public class Database internal constructor(internal val database: IDBDatabase) {
     public fun close() {
         database.close()
     }
+}
+
+private fun transactionOptions(durability: Durability): dynamic = jso {
+    this.durability = durability.jsValue
 }
