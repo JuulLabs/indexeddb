@@ -46,15 +46,25 @@ public suspend fun openDatabase(
 public suspend fun deleteDatabase(name: String) {
     val factory = checkNotNull(window.indexedDB) { "Your browser doesn't support IndexedDB." }
     val request = factory.deleteDatabase(name)
-    request.onNextEvent("success", "error") { event ->
+    request.onNextEvent("success", "error", "blocked") { event ->
         when (event.type) {
-            "error" -> throw ErrorEventException(event)
+            "error", "blocked" -> throw ErrorEventException(event)
             else -> null
         }
     }
 }
 
-public class Database internal constructor(internal val database: IDBDatabase) {
+public class Database internal constructor(database: IDBDatabase) {
+    private var database: IDBDatabase? = database
+
+    init {
+        // listen for database structure changes (e.g., upgradeneeded while DB is open or deleteDatabase)
+        database.addEventListener("versionchange", { close() })
+        // listen for force close, e.g., browser profile on a USB drive that's ejected or db deleted through dev tools
+        database.addEventListener("close", { close() })
+    }
+
+    internal fun ensureDatabase(): IDBDatabase = checkNotNull(database) { "database is closed" }
 
     /**
      * Inside the [action] block, you must not call any `suspend` functions except for:
@@ -68,7 +78,7 @@ public class Database internal constructor(internal val database: IDBDatabase) {
         action: suspend Transaction.() -> T,
     ): T = withContext(Dispatchers.Unconfined) {
         val transaction = Transaction(
-            database.transaction(arrayOf(*store), "readonly", transactionOptions(durability)),
+            ensureDatabase().transaction(arrayOf(*store), "readonly", transactionOptions(durability)),
         )
         val result = transaction.action()
         transaction.awaitCompletion()
@@ -87,7 +97,7 @@ public class Database internal constructor(internal val database: IDBDatabase) {
         action: suspend WriteTransaction.() -> T,
     ): T = withContext(Dispatchers.Unconfined) {
         val transaction = WriteTransaction(
-            database.transaction(arrayOf(*store), "readwrite", transactionOptions(durability)),
+            ensureDatabase().transaction(arrayOf(*store), "readwrite", transactionOptions(durability)),
         )
         with(transaction) {
             // Force overlapping transactions to not call `action` until prior transactions complete.
@@ -101,7 +111,8 @@ public class Database internal constructor(internal val database: IDBDatabase) {
     }
 
     public fun close() {
-        database.close()
+        database?.close()
+        database = null
     }
 }
 

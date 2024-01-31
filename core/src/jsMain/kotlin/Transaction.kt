@@ -300,18 +300,18 @@ public class VersionChangeTransaction internal constructor(
 
     /** Creates an object-store that uses explicit out-of-line keys. */
     public fun Database.createObjectStore(name: String): ObjectStore =
-        ObjectStore(database.createObjectStore(name))
+        ObjectStore(ensureDatabase().createObjectStore(name))
 
     /** Creates an object-store that uses in-line keys. */
     public fun Database.createObjectStore(name: String, keyPath: KeyPath): ObjectStore =
-        ObjectStore(database.createObjectStore(name, keyPath.toWrappedJs()))
+        ObjectStore(ensureDatabase().createObjectStore(name, keyPath.toWrappedJs()))
 
     /** Creates an object-store that uses out-of-line keys with a key-generator. */
     public fun Database.createObjectStore(name: String, autoIncrement: AutoIncrement): ObjectStore =
-        ObjectStore(database.createObjectStore(name, autoIncrement.toJs()))
+        ObjectStore(ensureDatabase().createObjectStore(name, autoIncrement.toJs()))
 
     public fun Database.deleteObjectStore(name: String) {
-        database.deleteObjectStore(name)
+        ensureDatabase().deleteObjectStore(name)
     }
 
     public fun ObjectStore.createIndex(name: String, keyPath: KeyPath, unique: Boolean): Index =
