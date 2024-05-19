@@ -1,0 +1,24 @@
+name: Validate Maven Signing
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  signing:
+    if: github.repository_owner == 'JuulLabs'
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v3
+
+      - name: publishToMavenLocal
+        run: >
+          ./gradlew
+          -PsigningInMemoryKey='${{ secrets.SIGNING_KEY }}'
+          -PsigningInMemoryKeyPassword='${{ secrets.SIGNING_PASSWORD }}'
+          publishToMavenLocal

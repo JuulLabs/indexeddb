@@ -11,35 +11,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-
-      - uses: actions/cache@v4
+      - uses: gradle/actions/setup-gradle@v3
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-build-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          validate-wrappers: true
 
       - run: ./gradlew assemble
       - run: ./gradlew check
-
-      - run: |
-          set -o xtrace
-          if [ ! -z "${{ secrets.SIGNING_KEY }}" ]; then
-            ./gradlew \
-            -PVERSION_NAME="unspecified" \
-            -PsigningInMemoryKey="${{ secrets.SIGNING_KEY }}" \
-            -PsigningInMemoryKeyPassword="${{ secrets.SIGNING_PASSWORD }}" \
-            publishToMavenLocal
-          else
-            ./gradlew \
-            -PVERSION_NAME="unspecified-SNAPSHOT" \
-            publishToMavenLocal
-          fi
-        if: ${{ github.repository_owner == 'JuulLabs' }}
-
-      - run: |
-          rm -f ~/.gradle/caches/modules-2/modules-2.lock
-          rm -f ~/.gradle/caches/modules-2/gc.properties
+      - run: ./gradlew -PRELEASE_SIGNING_ENABLED=false publishToMavenLocal
