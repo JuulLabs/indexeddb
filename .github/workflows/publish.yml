@@ -13,27 +13,14 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-
-      - uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-publish-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-publish-
-            ${{ runner.os }}-
+      - uses: gradle/actions/setup-gradle@v3
 
       - run: ./gradlew check
       - run: >-
           ./gradlew
-          -PVERSION_NAME="${GITHUB_REF/refs\/tags\//}"
-          -PsigningInMemoryKey="${{ secrets.SIGNING_KEY }}"
-          -PsigningInMemoryKeyPassword="${{ secrets.SIGNING_PASSWORD }}"
-          -PmavenCentralUsername="${{ secrets.OSS_SONATYPE_NEXUS_USERNAME }}"
-          -PmavenCentralPassword="${{ secrets.OSS_SONATYPE_NEXUS_PASSWORD }}"
+          -PVERSION_NAME='${{ github.ref_name }}'
+          -PsigningInMemoryKey='${{ secrets.SIGNING_KEY }}'
+          -PsigningInMemoryKeyPassword='${{ secrets.SIGNING_PASSWORD }}'
+          -PmavenCentralUsername='${{ secrets.OSS_SONATYPE_NEXUS_USERNAME }}'
+          -PmavenCentralPassword='${{ secrets.OSS_SONATYPE_NEXUS_PASSWORD }}'
           publish
-
-      - run: |
-          rm -f ~/.gradle/caches/modules-2/modules-2.lock
-          rm -f ~/.gradle/caches/modules-2/gc.properties
