@@ -1,3 +1,5 @@
+rootProject.name = "indexeddb"
+
 pluginManagement {
     repositories {
         google()
