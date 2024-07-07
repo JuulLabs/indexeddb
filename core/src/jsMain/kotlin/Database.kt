@@ -54,7 +54,9 @@ public suspend fun deleteDatabase(name: String) {
     }
 }
 
-public class Database internal constructor(database: IDBDatabase) {
+public class Database internal constructor(
+    database: IDBDatabase,
+) {
     private var database: IDBDatabase? = database
 
     init {
