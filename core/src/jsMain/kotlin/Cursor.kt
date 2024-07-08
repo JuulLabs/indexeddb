@@ -34,7 +34,9 @@ public open class Cursor internal constructor(
         cursor.continuePrimaryKey(key.toJs(), primaryKey.toJs())
     }
 
-    public enum class Direction(internal val constant: String) {
+    public enum class Direction(
+        internal val constant: String,
+    ) {
         Next("next"),
         NextUnique("nextunique"),
         Previous("prev"),
