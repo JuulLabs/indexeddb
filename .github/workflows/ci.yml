@@ -12,8 +12,6 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
       - uses: gradle/actions/setup-gradle@v4
-        with:
-          validate-wrappers: true
 
       - run: ./gradlew assemble
       - run: ./gradlew check
