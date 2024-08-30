@@ -5,11 +5,9 @@ public external interface IDBCursor {
     public val key: dynamic
     public val primaryKey: dynamic
 
-    public fun `continue`()
-
     public fun advance(count: Int)
 
-    public fun `continue`(key: dynamic)
+    public fun `continue`(key: dynamic = definedExternally)
 
     public fun continuePrimaryKey(key: dynamic, primaryKey: dynamic)
 }

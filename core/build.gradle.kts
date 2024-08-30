@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     kotlin("multiplatform")
     id("org.jmailen.kotlinter")
@@ -13,30 +15,36 @@ kotlin {
         binaries.library()
     }
 
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
+        binaries.library()
+    }
+
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(libs.coroutines.core)
-            }
+        commonMain.dependencies {
+            api(libs.coroutines.core)
         }
 
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-            }
+        commonTest.dependencies {
+            implementation(kotlin("test-common"))
+            implementation(kotlin("test-annotations-common"))
         }
 
-        val jsMain by getting {
-            dependencies {
-                implementation(project(":external"))
-            }
+        jsMain.dependencies {
+            implementation(project(":external"))
         }
 
-        val jsTest by getting {
-            dependencies {
-                implementation(kotlin("test-js"))
-            }
+        jsTest.dependencies {
+            implementation(kotlin("test-js"))
+        }
+
+        wasmJsMain.dependencies {
+            implementation(project(":external"))
+        }
+
+        wasmJsTest.dependencies {
+            implementation(kotlin("test-wasm-js"))
         }
     }
 }

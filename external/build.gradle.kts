@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     kotlin("multiplatform")
     id("org.jmailen.kotlinter")
@@ -9,6 +11,12 @@ kotlin {
     explicitApi()
 
     js {
+        browser()
+        binaries.library()
+    }
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
         browser()
         binaries.library()
     }
