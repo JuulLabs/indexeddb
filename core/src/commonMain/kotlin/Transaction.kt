@@ -9,6 +9,8 @@ import com.juul.indexeddb.external.JsAny
 import com.juul.indexeddb.external.ReadonlyArray
 import com.juul.indexeddb.external.UnsafeJsAny
 import com.juul.indexeddb.external.toInt
+import com.juul.indexeddb.external.toJsNumber
+import com.juul.indexeddb.external.toJsString
 import com.juul.indexeddb.unsafeCast
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.awaitClose
@@ -202,6 +204,78 @@ public open class WriteTransaction internal constructor(
     }
 
     /**
+     * Adds a new item to the database using an in-line or auto-incrementing key. If an item with the same
+     * key already exists, this will fail.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.add(item: String?): JsAny =
+        add(item?.toJsString())
+
+    /**
+     * Adds a new item to the database using an in-line or auto-incrementing key. If an item with the same
+     * key already exists, this will fail.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.add(item: Array<String>?): JsAny =
+        add(item?.toReadonlyArray())
+
+    /**
+     * Adds a new item to the database using an in-line or auto-incrementing key. If an item with the same
+     * key already exists, this will fail.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.add(item: Int?): JsAny =
+        add(item?.toJsNumber())
+
+    /**
+     * Adds a new item to the database using an in-line or auto-incrementing key. If an item with the same
+     * key already exists, this will fail.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.add(item: Array<Int>?): JsAny =
+        add(item?.toReadonlyArray())
+
+    /**
+     * Adds a new item to the database using an in-line or auto-incrementing key. If an item with the same
+     * key already exists, this will fail.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.add(item: Double?): JsAny =
+        add(item?.toJsNumber())
+
+    /**
+     * Adds a new item to the database using an in-line or auto-incrementing key. If an item with the same
+     * key already exists, this will fail.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.add(item: Array<Double>?): JsAny =
+        add(item?.toReadonlyArray())
+
+    /**
      * Adds a new item to the database using an explicit out-of-line key. If an item with the same key already
      * exists, this will fail.
      *
@@ -219,6 +293,78 @@ public open class WriteTransaction internal constructor(
             }
         }
     }
+
+    /**
+     * Adds a new item to the database using an explicit out-of-line key. If an item with the same key already
+     * exists, this will fail.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.add(item: String?, key: IDBKey): JsAny =
+        add(item?.toJsString(), key)
+
+    /**
+     * Adds a new item to the database using an explicit out-of-line key. If an item with the same key already
+     * exists, this will fail.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.add(item: Array<String>?, key: IDBKey): JsAny =
+        add(item?.toReadonlyArray(), key)
+
+    /**
+     * Adds a new item to the database using an explicit out-of-line key. If an item with the same key already
+     * exists, this will fail.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.add(item: Int?, key: IDBKey): JsAny =
+        add(item?.toJsNumber(), key)
+
+    /**
+     * Adds a new item to the database using an explicit out-of-line key. If an item with the same key already
+     * exists, this will fail.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.add(item: Array<Int>?, key: IDBKey): JsAny =
+        add(item?.toReadonlyArray(), key)
+
+    /**
+     * Adds a new item to the database using an explicit out-of-line key. If an item with the same key already
+     * exists, this will fail.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.add(item: Double?, key: IDBKey): JsAny =
+        add(item?.toJsNumber(), key)
+
+    /**
+     * Adds a new item to the database using an explicit out-of-line key. If an item with the same key already
+     * exists, this will fail.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.add(item: Array<Double>?, key: IDBKey): JsAny =
+        add(item?.toReadonlyArray(), key)
 
     /**
      * Adds an item to or updates an item in the database using an in-line or auto-incrementing key. If an item
@@ -241,6 +387,84 @@ public open class WriteTransaction internal constructor(
     }
 
     /**
+     * Adds an item to or updates an item in the database using an in-line or auto-incrementing key. If an item
+     * with the same key already exists, this will replace that item. Note that with auto-incrementing keys a new
+     * item will always be inserted.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.put(item: String?): JsAny =
+        put(item?.toJsString())
+
+    /**
+     * Adds an item to or updates an item in the database using an in-line or auto-incrementing key. If an item
+     * with the same key already exists, this will replace that item. Note that with auto-incrementing keys a new
+     * item will always be inserted.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.put(item: Array<String>?): JsAny =
+        put(item?.toReadonlyArray())
+
+    /**
+     * Adds an item to or updates an item in the database using an in-line or auto-incrementing key. If an item
+     * with the same key already exists, this will replace that item. Note that with auto-incrementing keys a new
+     * item will always be inserted.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.put(item: Int?): JsAny =
+        put(item?.toJsNumber())
+
+    /**
+     * Adds an item to or updates an item in the database using an in-line or auto-incrementing key. If an item
+     * with the same key already exists, this will replace that item. Note that with auto-incrementing keys a new
+     * item will always be inserted.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.put(item: Array<Int>?): JsAny =
+        put(item?.toReadonlyArray())
+
+    /**
+     * Adds an item to or updates an item in the database using an in-line or auto-incrementing key. If an item
+     * with the same key already exists, this will replace that item. Note that with auto-incrementing keys a new
+     * item will always be inserted.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.put(item: Double?): JsAny =
+        put(item?.toJsNumber())
+
+    /**
+     * Adds an item to or updates an item in the database using an in-line or auto-incrementing key. If an item
+     * with the same key already exists, this will replace that item. Note that with auto-incrementing keys a new
+     * item will always be inserted.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.put(item: Array<Double>?): JsAny =
+        put(item?.toReadonlyArray())
+
+    /**
      * Adds an item to or updates an item in the database using an explicit out-of-line key. If an item with the
      * same key already exists, this will replace that item.
      *
@@ -258,6 +482,78 @@ public open class WriteTransaction internal constructor(
             }
         }
     }
+
+    /**
+     * Adds an item to or updates an item in the database using an explicit out-of-line key. If an item with the
+     * same key already exists, this will replace that item.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.put(item: String?, key: IDBKey): JsAny =
+        put(item?.toJsString(), key)
+
+    /**
+     * Adds an item to or updates an item in the database using an explicit out-of-line key. If an item with the
+     * same key already exists, this will replace that item.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.put(item: Array<String>?, key: IDBKey): JsAny =
+        put(item?.toReadonlyArray(), key)
+
+    /**
+     * Adds an item to or updates an item in the database using an explicit out-of-line key. If an item with the
+     * same key already exists, this will replace that item.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.put(item: Int?, key: IDBKey): JsAny =
+        put(item?.toJsNumber(), key)
+
+    /**
+     * Adds an item to or updates an item in the database using an explicit out-of-line key. If an item with the
+     * same key already exists, this will replace that item.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.put(item: Array<Int>?, key: IDBKey): JsAny =
+        put(item?.toReadonlyArray(), key)
+
+    /**
+     * Adds an item to or updates an item in the database using an explicit out-of-line key. If an item with the
+     * same key already exists, this will replace that item.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.put(item: Double?, key: IDBKey): JsAny =
+        put(item?.toJsNumber(), key)
+
+    /**
+     * Adds an item to or updates an item in the database using an explicit out-of-line key. If an item with the
+     * same key already exists, this will replace that item.
+     *
+     * This API is delicate. If you're passing in Kotlin objects directly, you're probably doing it wrong.
+     *
+     * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
+     * doesn't mangle, prefix, or otherwise mess with your field names.
+     */
+    public suspend fun ObjectStore.put(item: Array<Double>?, key: IDBKey): JsAny =
+        put(item?.toReadonlyArray(), key)
 
     public suspend fun ObjectStore.delete(key: IDBKey) {
         val request = objectStore.delete(key)
