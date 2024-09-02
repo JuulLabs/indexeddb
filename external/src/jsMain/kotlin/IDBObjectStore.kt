@@ -1,20 +1,20 @@
 package com.juul.indexeddb.external
 
-/** https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore */
-public external interface IDBObjectStore : IDBQueryable {
-    public val name: String
+public actual external interface IDBObjectStore : IDBQueryable {
+    public actual val name: String
 
-    public fun add(value: dynamic): IDBRequest<dynamic>
-    public fun add(value: dynamic, key: dynamic): IDBRequest<dynamic>
+    public actual fun add(value: JsAny?): IDBRequest<IDBKey>
+    public actual fun add(value: JsAny?, key: IDBKey): IDBRequest<IDBKey>
 
-    public fun put(item: dynamic): IDBRequest<dynamic>
-    public fun put(item: dynamic, key: dynamic): IDBRequest<dynamic>
+    public actual fun put(item: JsAny?): IDBRequest<IDBKey>
+    public actual fun put(item: JsAny?, key: IDBKey): IDBRequest<IDBKey>
 
-    public fun delete(key: dynamic): IDBRequest<dynamic>
+    public actual fun delete(key: IDBKey): IDBRequest<*>
+    public actual fun delete(key: IDBKeyRange): IDBRequest<*>
 
-    public fun clear(): IDBRequest<dynamic>
+    public actual fun clear(): IDBRequest<*>
 
-    public fun index(name: String): IDBIndex
-    public fun deleteIndex(name: String): Unit
-    public fun createIndex(name: String, keyPath: dynamic, parameters: dynamic): IDBIndex
+    public actual fun index(name: String): IDBIndex
+    public actual fun deleteIndex(name: String)
+    public actual fun createIndex(name: String, keyPath: JsAny?, options: IDBIndexOptions): IDBIndex
 }

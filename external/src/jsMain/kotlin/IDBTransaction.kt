@@ -1,17 +1,13 @@
 package com.juul.indexeddb.external
 
-import org.w3c.dom.events.Event
-import org.w3c.dom.events.EventTarget
-
-/** https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction */
-public external class IDBTransaction : EventTarget {
-    public val objectStoreNames: Array<String> // Actually a DOMStringList
-    public val db: IDBDatabase
-    public val error: Throwable?
-    public fun objectStore(name: String): IDBObjectStore
-    public fun abort(): Unit
-    public fun commit(): Unit
-    public var onabort: (Event) -> Unit
-    public var onerror: (Event) -> Unit
-    public var oncomplete: (Event) -> Unit
+public actual external class IDBTransaction : EventTarget {
+    public actual val objectStoreNames: JsArray<JsString> // Actually a DOMStringList
+    public actual val db: IDBDatabase
+    public actual val error: JsAny?
+    public actual fun objectStore(name: String): IDBObjectStore
+    public actual fun abort()
+    public actual fun commit()
+    public actual var onabort: (Event) -> Unit
+    public actual var onerror: (Event) -> Unit
+    public actual var oncomplete: (Event) -> Unit
 }

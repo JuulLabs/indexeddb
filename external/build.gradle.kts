@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     kotlin("multiplatform")
@@ -19,5 +20,11 @@ kotlin {
     wasmJs {
         browser()
         binaries.library()
+    }
+}
+
+tasks.withType<KotlinCompilationTask<*>>().configureEach {
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 }

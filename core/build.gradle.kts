@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     kotlin("multiplatform")
@@ -23,28 +24,28 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            api(project(":external"))
+
             api(libs.coroutines.core)
         }
 
         commonTest.dependencies {
-            implementation(kotlin("test-common"))
-            implementation(kotlin("test-annotations-common"))
-        }
-
-        jsMain.dependencies {
-            implementation(project(":external"))
+            implementation(kotlin("test"))
+            implementation(libs.coroutines.test)
         }
 
         jsTest.dependencies {
             implementation(kotlin("test-js"))
         }
 
-        wasmJsMain.dependencies {
-            implementation(project(":external"))
-        }
-
         wasmJsTest.dependencies {
             implementation(kotlin("test-wasm-js"))
         }
+    }
+}
+
+tasks.withType<KotlinCompilationTask<*>>().configureEach {
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 }

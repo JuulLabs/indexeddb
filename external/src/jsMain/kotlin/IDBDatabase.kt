@@ -1,15 +1,23 @@
 package com.juul.indexeddb.external
 
-import org.w3c.dom.events.EventTarget
+public actual external class IDBDatabase : EventTarget {
+    public actual val name: String
+    public actual val version: Int
+    public actual val objectStoreNames: JsArray<JsString>
+    public actual fun close()
+    public actual fun createObjectStore(name: String): IDBObjectStore
+    public actual fun createObjectStore(name: String, options: IDBObjectStoreOptions?): IDBObjectStore
+    public actual fun deleteObjectStore(name: String)
 
-/** https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase */
-public external class IDBDatabase : EventTarget {
-    public val name: String
-    public val version: Int
-    public val objectStoreNames: Array<String>
-    public fun close()
-    public fun createObjectStore(name: String): IDBObjectStore
-    public fun createObjectStore(name: String, options: dynamic): IDBObjectStore
-    public fun deleteObjectStore(name: String)
-    public fun transaction(storeNames: Array<String>, mode: String, options: dynamic): IDBTransaction
+    public actual fun transaction(
+        storeName: String,
+        mode: String,
+        options: IDBTransactionOptions,
+    ): IDBTransaction
+
+    public actual fun transaction(
+        storeNames: ReadonlyArray<JsString>,
+        mode: String,
+        options: IDBTransactionOptions,
+    ): IDBTransaction
 }

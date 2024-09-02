@@ -77,7 +77,7 @@ a [`WriteTransaction`] sharing that store.
 
 ```kotlin
 val bill = database.transaction("customers") {
-    objectStore("customers").get(Key("444-44-4444")) as Customer
+    objectStore("customers").get(IDBKey("444-44-4444")) as Customer
 }
 assertEquals("Bill", bill.name)
 ```

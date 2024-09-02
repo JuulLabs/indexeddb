@@ -1,17 +1,14 @@
 package com.juul.indexeddb.external
 
-/** https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase/createObjectStore#parameters */
-public external interface IDBObjectStoreOptions : JsAny {
-    public val autoIncrement: Boolean?
-    public val keyPath: JsAny
+public actual external interface IDBObjectStoreOptions : JsAny {
+    public actual val autoIncrement: Boolean?
+    public actual val keyPath: JsAny
 }
 
-public fun IDBObjectStoreOptions(
+public actual fun IDBObjectStoreOptions(
     autoIncrement: Boolean,
-): IDBObjectStoreOptions =
-    js("({ autoIncrement: autoIncrement })")
+): IDBObjectStoreOptions = js("({ autoIncrement: autoIncrement })")
 
-public fun IDBObjectStoreOptions(
-    autoIncrement: Boolean,
+public actual fun IDBObjectStoreOptions(
     keyPath: JsAny?,
-): IDBObjectStoreOptions = js("({ autoIncrement: autoIncrement, keyPath: keyPath })")
+): IDBObjectStoreOptions = js("({ keyPath: keyPath })")
