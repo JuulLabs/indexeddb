@@ -4,9 +4,13 @@ import com.juul.indexeddb.external.IDBDatabase
 import com.juul.indexeddb.external.IDBFactory
 import com.juul.indexeddb.external.IDBVersionChangeEvent
 import com.juul.indexeddb.external.indexedDB
+import com.juul.indexeddb.logs.Logger
+import com.juul.indexeddb.logs.NoOpLogger
+import com.juul.indexeddb.logs.Type
 import kotlinx.browser.window
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.w3c.dom.events.Event
 
 /**
  * Inside the [initialize] block, you must not call any `suspend` functions except for:
@@ -17,6 +21,7 @@ import kotlinx.coroutines.withContext
 public suspend fun openDatabase(
     name: String,
     version: Int,
+    logger: Logger = NoOpLogger,
     initialize: suspend VersionChangeTransaction.(
         database: Database,
         oldVersion: Int,
@@ -25,6 +30,7 @@ public suspend fun openDatabase(
 ): Database = withContext(Dispatchers.Unconfined) {
     val indexedDB: IDBFactory? = js("self.indexedDB || self.webkitIndexedDB") as? IDBFactory
     val factory = checkNotNull(indexedDB) { "Your browser doesn't support IndexedDB." }
+    logger.log(Type.DatabaseOpen) { "Opening database `$name` at version `$version`" }
     val request = factory.open(name, version)
     val versionChangeEvent = request.onNextEvent("success", "upgradeneeded", "error", "blocked") { event ->
         when (event.type) {
@@ -34,12 +40,16 @@ public suspend fun openDatabase(
             else -> null
         }
     }
-    Database(request.result).also { database ->
+    Database(request.result, logger).also { database ->
         if (versionChangeEvent != null) {
+            logger.log(Type.DatabaseUpgrade, versionChangeEvent) {
+                "Upgrading database `$name` from version `${versionChangeEvent.oldVersion}` to `${versionChangeEvent.newVersion}`"
+            }
             val transaction = VersionChangeTransaction(checkNotNull(request.transaction))
             transaction.initialize(database, versionChangeEvent.oldVersion, versionChangeEvent.newVersion)
             transaction.awaitCompletion()
         }
+        logger.log(Type.DatabaseOpen) { "Opened database `$name`" }
     }
 }
 
@@ -56,14 +66,20 @@ public suspend fun deleteDatabase(name: String) {
 
 public class Database internal constructor(
     database: IDBDatabase,
+    private val logger: Logger,
 ) {
+    private val name = database.name
     private var database: IDBDatabase? = database
 
     init {
+        val callback = { event: Event ->
+            logger.log(Type.DatabaseClose, event) { "Closing database `$name` due to event" }
+            onClose()
+        }
         // listen for database structure changes (e.g., upgradeneeded while DB is open or deleteDatabase)
-        database.addEventListener("versionchange", { close() })
+        database.addEventListener("versionchange", callback)
         // listen for force close, e.g., browser profile on a USB drive that's ejected or db deleted through dev tools
-        database.addEventListener("close", { close() })
+        database.addEventListener("close", callback)
     }
 
     internal fun ensureDatabase(): IDBDatabase = checkNotNull(database) { "database is closed" }
@@ -113,8 +129,19 @@ public class Database internal constructor(
     }
 
     public fun close() {
-        database?.close()
-        database = null
+        logger.log(Type.DatabaseClose) { "Closing database `$name` due to explicit `close()`" }
+        onClose()
+    }
+
+    private fun onClose() {
+        val db = database
+        if (db != null) {
+            db.close()
+            database = null
+            logger.log(Type.DatabaseClose) { "Closed database `$name`" }
+        } else {
+            logger.log(Type.DatabaseClose) { "Close skipped, database `$name` already closed" }
+        }
     }
 }
 
