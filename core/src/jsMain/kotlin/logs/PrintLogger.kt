@@ -8,7 +8,7 @@ public object PrintLogger : Logger {
         val msg = message()
         when (event) {
             null -> println("$type: $msg")
-            else -> println("$type (event=$event): $msg")
+            else -> println("$type (event=${event.type}): $msg")
         }
     }
 }

@@ -7,6 +7,13 @@ import com.juul.indexeddb.external.IDBIndex
 public class Index internal constructor(
     internal val index: IDBIndex,
 ) : Queryable() {
+
+    override val type: String
+        get() = "index"
+
+    override val name: String
+        get() = index.name
+
     override fun requestGet(key: Key): Request<dynamic> =
         Request(index.get(key.toJs()))
 

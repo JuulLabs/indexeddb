@@ -27,11 +27,11 @@ private class EventAsMessageLogger(
     }
 
     private fun propertyStrings(event: Event): List<String> = buildList {
-        add("type: ${event.type}")
-        add("target: ${event.target}")
+        // event.target explicitly excluded since it just prints stuff like [object IDBTransaction], not actually useful
+        add("event.type: ${event.type}")
         if (event is IDBVersionChangeEvent) {
-            add("oldVersion: ${event.oldVersion}")
-            add("newVersion: ${event.newVersion}")
+            add("event.oldVersion: ${event.oldVersion}")
+            add("event.newVersion: ${event.newVersion}")
         }
     }
 }

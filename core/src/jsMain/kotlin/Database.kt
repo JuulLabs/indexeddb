@@ -30,7 +30,7 @@ public suspend fun openDatabase(
 ): Database = withContext(Dispatchers.Unconfined) {
     val indexedDB: IDBFactory? = js("self.indexedDB || self.webkitIndexedDB") as? IDBFactory
     val factory = checkNotNull(indexedDB) { "Your browser doesn't support IndexedDB." }
-    logger.log(Type.DatabaseOpen) { "Opening database `$name` at version `$version`" }
+    logger.log(Type.Database) { "Opening database `$name` at version `$version`" }
     val request = factory.open(name, version)
     val versionChangeEvent = request.onNextEvent("success", "upgradeneeded", "error", "blocked") { event ->
         when (event.type) {
@@ -42,21 +42,29 @@ public suspend fun openDatabase(
     }
     Database(request.result, logger).also { database ->
         if (versionChangeEvent != null) {
-            logger.log(Type.DatabaseUpgrade, versionChangeEvent) {
+            logger.log(Type.Database, versionChangeEvent) {
                 "Upgrading database `$name` from version `${versionChangeEvent.oldVersion}` to `${versionChangeEvent.newVersion}`"
             }
-            val transaction = VersionChangeTransaction(checkNotNull(request.transaction))
+            logger.log(Type.Transaction) { "Opened `versionchange` transaction with id `0`" }
+            val transaction = VersionChangeTransaction(checkNotNull(request.transaction), logger, transactionId = 0)
             transaction.initialize(database, versionChangeEvent.oldVersion, versionChangeEvent.newVersion)
-            transaction.awaitCompletion()
+            transaction.awaitCompletion { event ->
+                logger.log(Type.Transaction, event) { "Closed `versionchange` transaction with id `0`" }
+            }
         }
-        logger.log(Type.DatabaseOpen) { "Opened database `$name`" }
+        logger.log(Type.Database) { "Opened database `$name`" }
     }
 }
 
-public suspend fun deleteDatabase(name: String) {
+public suspend fun deleteDatabase(
+    name: String,
+    logger: Logger = NoOpLogger,
+) {
+    logger.log(Type.Database) { "Deleting database `$name`" }
     val factory = checkNotNull(window.indexedDB) { "Your browser doesn't support IndexedDB." }
     val request = factory.deleteDatabase(name)
     request.onNextEvent("success", "error", "blocked") { event ->
+        logger.log(Type.Database, event) { "Deleted database `$name`" }
         when (event.type) {
             "error", "blocked" -> throw ErrorEventException(event)
             else -> null
@@ -70,11 +78,12 @@ public class Database internal constructor(
 ) {
     private val name = database.name
     private var database: IDBDatabase? = database
+    private var transactionId = 1L
 
     init {
         val callback = { event: Event ->
-            logger.log(Type.DatabaseClose, event) { "Closing database `$name` due to event" }
-            onClose()
+            logger.log(Type.Database, event) { "Closing database `$name` due to event" }
+            tryClose()
         }
         // listen for database structure changes (e.g., upgradeneeded while DB is open or deleteDatabase)
         database.addEventListener("versionchange", callback)
@@ -95,11 +104,18 @@ public class Database internal constructor(
         durability: Durability = Durability.Default,
         action: suspend Transaction.() -> T,
     ): T = withContext(Dispatchers.Unconfined) {
+        val id = transactionId++
         val transaction = Transaction(
             ensureDatabase().transaction(arrayOf(*store), "readonly", transactionOptions(durability)),
+            logger,
+            id,
         )
+
+        logger.log(Type.Transaction) { "Opened `readonly` transaction with id `$id` using stores ${store.joinToString { "`$it`" }}" }
         val result = transaction.action()
-        transaction.awaitCompletion()
+        transaction.awaitCompletion { event ->
+            logger.log(Type.Transaction, event) { "Closed `readonly` transaction with id `$id`" }
+        }
         result
     }
 
@@ -114,8 +130,11 @@ public class Database internal constructor(
         durability: Durability = Durability.Default,
         action: suspend WriteTransaction.() -> T,
     ): T = withContext(Dispatchers.Unconfined) {
+        val id = transactionId++
         val transaction = WriteTransaction(
             ensureDatabase().transaction(arrayOf(*store), "readwrite", transactionOptions(durability)),
+            logger,
+            id,
         )
         with(transaction) {
             // Force overlapping transactions to not call `action` until prior transactions complete.
@@ -123,24 +142,28 @@ public class Database internal constructor(
                 .openKeyCursor(autoContinue = false)
                 .collect { it.close() }
         }
+
+        logger.log(Type.Transaction) { "Opened `readwrite` transaction with id `$id`" }
         val result = transaction.action()
-        transaction.awaitCompletion()
+        transaction.awaitCompletion { event ->
+            logger.log(Type.Transaction, event) { "Closed `readwrite` transaction with id `$id`" }
+        }
         result
     }
 
     public fun close() {
-        logger.log(Type.DatabaseClose) { "Closing database `$name` due to explicit `close()`" }
-        onClose()
+        logger.log(Type.Database) { "Closing database `$name` due to explicit `close()`" }
+        tryClose()
     }
 
-    private fun onClose() {
+    private fun tryClose() {
         val db = database
         if (db != null) {
             db.close()
             database = null
-            logger.log(Type.DatabaseClose) { "Closed database `$name`" }
+            logger.log(Type.Database) { "Closed database `$name`" }
         } else {
-            logger.log(Type.DatabaseClose) { "Close skipped, database `$name` already closed" }
+            logger.log(Type.Database) { "Close skipped, database `$name` already closed" }
         }
     }
 }
