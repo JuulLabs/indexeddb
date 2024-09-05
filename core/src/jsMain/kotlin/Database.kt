@@ -46,7 +46,7 @@ public suspend fun openDatabase(
                 "Upgrading database `$name` from version `${versionChangeEvent.oldVersion}` to `${versionChangeEvent.newVersion}`"
             }
             val id = database.transactionId++
-            logger.log(Type.Transaction) { "Opened versionchange transaction $id on database `$name`" }
+            logger.log(Type.Transaction) { "Opening versionchange transaction $id on database `$name`" }
             val transaction = VersionChangeTransaction(checkNotNull(request.transaction), logger, id)
             transaction.initialize(database, versionChangeEvent.oldVersion, versionChangeEvent.newVersion)
             transaction.awaitCompletion { event ->
@@ -109,15 +109,15 @@ public class Database internal constructor(
         action: suspend Transaction.() -> T,
     ): T = withContext(Dispatchers.Unconfined) {
         val id = transactionId++
+        logger.log(Type.Transaction) {
+            "Opened readonly transaction $id using stores ${store.joinToString { "`$it`" }} on database `$name`"
+        }
+
         val transaction = Transaction(
             ensureDatabase().transaction(arrayOf(*store), "readonly", transactionOptions(durability)),
             logger,
             id,
         )
-
-        logger.log(Type.Transaction) {
-            "Opened readonly transaction $id using stores ${store.joinToString { "`$it`" }} on database `$name`"
-        }
         val result = transaction.action()
         transaction.awaitCompletion { event ->
             logger.log(Type.Transaction, event) { "Closed readonly transaction $id on database `$name`" }
@@ -137,6 +137,10 @@ public class Database internal constructor(
         action: suspend WriteTransaction.() -> T,
     ): T = withContext(Dispatchers.Unconfined) {
         val id = transactionId++
+        logger.log(Type.Transaction) {
+            "Opening readwrite transaction $id using stores ${store.joinToString { "`$it`" }} on database `$name`"
+        }
+
         val transaction = WriteTransaction(
             ensureDatabase().transaction(arrayOf(*store), "readwrite", transactionOptions(durability)),
             logger,
@@ -145,10 +149,6 @@ public class Database internal constructor(
         with(transaction) {
             // Force overlapping transactions to not call `action` until prior transactions complete.
             objectStore(store.first()).awaitTransaction()
-        }
-
-        logger.log(Type.Transaction) {
-            "Opened readwrite transaction $id using stores ${store.joinToString { "`$it`" }} on database `$name`"
         }
         val result = transaction.action()
         transaction.awaitCompletion { event ->
