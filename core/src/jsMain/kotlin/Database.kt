@@ -45,11 +45,12 @@ public suspend fun openDatabase(
             logger.log(Type.Database, versionChangeEvent) {
                 "Upgrading database `$name` from version `${versionChangeEvent.oldVersion}` to `${versionChangeEvent.newVersion}`"
             }
-            logger.log(Type.Transaction) { "Opened `versionchange` transaction with id `0`" }
-            val transaction = VersionChangeTransaction(checkNotNull(request.transaction), logger, transactionId = 0)
+            val id = database.transactionId++
+            logger.log(Type.Transaction) { "Opened versionchange transaction $id" }
+            val transaction = VersionChangeTransaction(checkNotNull(request.transaction), logger, id)
             transaction.initialize(database, versionChangeEvent.oldVersion, versionChangeEvent.newVersion)
             transaction.awaitCompletion { event ->
-                logger.log(Type.Transaction, event) { "Closed `versionchange` transaction with id `0`" }
+                logger.log(Type.Transaction, event) { "Closed versionchange transaction $id" }
             }
         }
         logger.log(Type.Database) { "Opened database `$name`" }
@@ -64,10 +65,13 @@ public suspend fun deleteDatabase(
     val factory = checkNotNull(window.indexedDB) { "Your browser doesn't support IndexedDB." }
     val request = factory.deleteDatabase(name)
     request.onNextEvent("success", "error", "blocked") { event ->
-        logger.log(Type.Database, event) { "Deleted database `$name`" }
         when (event.type) {
-            "error", "blocked" -> throw ErrorEventException(event)
-            else -> null
+            "error", "blocked" -> {
+                logger.log(Type.Database, event) { "Delete failed for database `$name`" }
+                throw ErrorEventException(event)
+            }
+
+            else -> logger.log(Type.Database, event) { "Deleted database `$name`" }
         }
     }
 }
@@ -78,7 +82,7 @@ public class Database internal constructor(
 ) {
     private val name = database.name
     private var database: IDBDatabase? = database
-    private var transactionId = 1L
+    internal var transactionId = 0L
 
     init {
         val callback = { event: Event ->
@@ -111,10 +115,10 @@ public class Database internal constructor(
             id,
         )
 
-        logger.log(Type.Transaction) { "Opened `readonly` transaction with id `$id` using stores ${store.joinToString { "`$it`" }}" }
+        logger.log(Type.Transaction) { "Opened readonly transaction $id using stores ${store.joinToString { "`$it`" }}" }
         val result = transaction.action()
         transaction.awaitCompletion { event ->
-            logger.log(Type.Transaction, event) { "Closed `readonly` transaction with id `$id`" }
+            logger.log(Type.Transaction, event) { "Closed readonly transaction $id" }
         }
         result
     }
@@ -138,15 +142,13 @@ public class Database internal constructor(
         )
         with(transaction) {
             // Force overlapping transactions to not call `action` until prior transactions complete.
-            objectStore(store.first())
-                .openKeyCursor(autoContinue = false)
-                .collect { it.close() }
+            objectStore(store.first()).awaitTransaction()
         }
 
-        logger.log(Type.Transaction) { "Opened `readwrite` transaction with id `$id`" }
+        logger.log(Type.Transaction) { "Opened readwrite transaction $id" }
         val result = transaction.action()
         transaction.awaitCompletion { event ->
-            logger.log(Type.Transaction, event) { "Closed `readwrite` transaction with id `$id`" }
+            logger.log(Type.Transaction, event) { "Closed readwrite transaction $id" }
         }
         result
     }

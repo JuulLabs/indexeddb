@@ -4,11 +4,13 @@ import com.juul.indexeddb.external.IDBCursor
 import com.juul.indexeddb.external.IDBRequest
 import com.juul.indexeddb.external.IDBTransaction
 import com.juul.indexeddb.logs.Logger
+import com.juul.indexeddb.logs.NoOpLogger
 import com.juul.indexeddb.logs.Type
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.collect
 import org.w3c.dom.events.Event
 
 public open class Transaction internal constructor(
@@ -34,11 +36,11 @@ public open class Transaction internal constructor(
         crossinline makeRequest: () -> IDBRequest<T>,
     ): T {
         val id = operationId++
-        logger.log(Type.Query) { "$functionName request on $type `$name` (transaction $transactionId, request $id)" }
+        logger.log(Type.Query) { "$functionName request on $type `$name` (transaction $transactionId, operation $id)" }
         val request = makeRequest()
         return request.onNextEvent("success", "error") { event ->
             logger.log(Type.Query, event) {
-                "$functionName response on $type `$name` (transaction $transactionId, request $id)"
+                "$functionName response on $type `$name` (transaction $transactionId, operation $id)"
             }
             when (event.type) {
                 "error" -> throw ErrorEventException(event)
@@ -86,12 +88,14 @@ public open class Transaction internal constructor(
         cursorStart: CursorStart? = null,
         autoContinue: Boolean,
     ): Flow<CursorWithValue> = openCursorImpl(
+        "openCursor",
         query,
         direction,
         cursorStart,
         open = this::requestOpenCursor,
         wrap = ::CursorWithValue,
         autoContinue,
+        logger,
     )
 
     @Deprecated(
@@ -124,22 +128,51 @@ public open class Transaction internal constructor(
         cursorStart: CursorStart? = null,
         autoContinue: Boolean,
     ): Flow<Cursor> = openCursorImpl(
+        "openKeyCursor",
         query,
         direction,
         cursorStart,
         open = this::requestOpenKeyCursor,
         wrap = ::Cursor,
         autoContinue,
+        logger,
     )
 
-    private suspend fun <T : Cursor, U : IDBCursor> openCursorImpl(
+    /**
+     * Opens a key cursor, then immediately close it. This has the effect of being the minimally expensive query that
+     * still waits for the transaction to be available.
+     */
+    internal suspend fun Queryable.awaitTransaction() {
+        openCursorImpl(
+            "openKeyCursor",
+            query = null,
+            direction = Cursor.Direction.Next,
+            cursorStart = null,
+            open = this::requestOpenKeyCursor,
+            wrap = ::Cursor,
+            autoContinue = false,
+            logger = NoOpLogger,
+        ).collect {
+            it.close()
+        }
+        // Since this function is an internal implementation detail, undo incrementing the operation id to avoid
+        // confusion where request 0 went.
+        operationId -= 1
+    }
+
+    private fun <T : Cursor, U : IDBCursor> Queryable.openCursorImpl(
+        functionName: String,
         query: Key?,
         direction: Cursor.Direction,
         cursorStart: CursorStart?,
         open: (Key?, Cursor.Direction) -> Request<U?>,
         wrap: (U, SendChannel<*>) -> T,
         autoContinue: Boolean,
+        logger: Logger,
     ): Flow<T> = callbackFlow {
+        val id = operationId++
+        logger.log(Type.Cursor) { "$functionName request on $type `$name` (transaction $transactionId, operation $id)" }
+
         var cursorStartAction = cursorStart
         val request = open(query, direction).request
         val onSuccess: (Event) -> Unit = { event ->
@@ -149,6 +182,9 @@ public open class Transaction internal constructor(
                 cursorStartAction?.apply(cursor)
                 cursorStartAction = null
             } else if (cursor != null) {
+                logger.log(Type.Cursor, event) {
+                    "Cursor value on $type `$name` (transaction $transactionId, operation $id)"
+                }
                 val result = trySend(wrap(cursor, channel))
                 when {
                     result.isSuccess -> if (autoContinue) cursor.`continue`()
@@ -163,6 +199,7 @@ public open class Transaction internal constructor(
         request.addEventListener("success", onSuccess)
         request.addEventListener("error", onError)
         awaitClose {
+            logger.log(Type.Cursor) { "Cursor closed on $type `$name` (transaction $transactionId, operation $id)" }
             request.removeEventListener("success", onSuccess)
             request.removeEventListener("error", onError)
         }
