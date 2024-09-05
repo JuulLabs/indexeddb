@@ -46,11 +46,11 @@ public suspend fun openDatabase(
                 "Upgrading database `$name` from version `${versionChangeEvent.oldVersion}` to `${versionChangeEvent.newVersion}`"
             }
             val id = database.transactionId++
-            logger.log(Type.Transaction) { "Opened versionchange transaction $id" }
+            logger.log(Type.Transaction) { "Opened versionchange transaction $id on database `$name`" }
             val transaction = VersionChangeTransaction(checkNotNull(request.transaction), logger, id)
             transaction.initialize(database, versionChangeEvent.oldVersion, versionChangeEvent.newVersion)
             transaction.awaitCompletion { event ->
-                logger.log(Type.Transaction, event) { "Closed versionchange transaction $id" }
+                logger.log(Type.Transaction, event) { "Closed versionchange transaction $id on database `$name`" }
             }
         }
         logger.log(Type.Database) { "Opened database `$name`" }
@@ -115,10 +115,12 @@ public class Database internal constructor(
             id,
         )
 
-        logger.log(Type.Transaction) { "Opened readonly transaction $id using stores ${store.joinToString { "`$it`" }}" }
+        logger.log(Type.Transaction) {
+            "Opened readonly transaction $id using stores ${store.joinToString { "`$it`" }} on database `$name`"
+        }
         val result = transaction.action()
         transaction.awaitCompletion { event ->
-            logger.log(Type.Transaction, event) { "Closed readonly transaction $id" }
+            logger.log(Type.Transaction, event) { "Closed readonly transaction $id on database `$name`" }
         }
         result
     }
@@ -145,10 +147,12 @@ public class Database internal constructor(
             objectStore(store.first()).awaitTransaction()
         }
 
-        logger.log(Type.Transaction) { "Opened readwrite transaction $id" }
+        logger.log(Type.Transaction) {
+            "Opened readwrite transaction $id using stores ${store.joinToString { "`$it`" }} on database `$name`"
+        }
         val result = transaction.action()
         transaction.awaitCompletion { event ->
-            logger.log(Type.Transaction, event) { "Closed readwrite transaction $id" }
+            logger.log(Type.Transaction, event) { "Closed readwrite transaction $id on database `$name`" }
         }
         result
     }
