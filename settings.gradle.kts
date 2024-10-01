@@ -11,4 +11,5 @@ pluginManagement {
 include(
     "core",
     "external",
+    "logging-khronicle",
 )
