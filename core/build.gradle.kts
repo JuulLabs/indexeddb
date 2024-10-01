@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+
 plugins {
     kotlin("multiplatform")
     id("org.jmailen.kotlinter")
@@ -13,30 +16,36 @@ kotlin {
         binaries.library()
     }
 
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
+        binaries.library()
+    }
+
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(libs.coroutines.core)
-            }
+        commonMain.dependencies {
+            api(project(":external"))
+
+            api(libs.coroutines.core)
         }
 
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-            }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.coroutines.test)
         }
 
-        val jsMain by getting {
-            dependencies {
-                implementation(project(":external"))
-            }
+        jsTest.dependencies {
+            implementation(kotlin("test-js"))
         }
 
-        val jsTest by getting {
-            dependencies {
-                implementation(kotlin("test-js"))
-            }
+        wasmJsTest.dependencies {
+            implementation(kotlin("test-wasm-js"))
         }
+    }
+}
+
+tasks.withType<KotlinCompilationTask<*>>().configureEach {
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 }

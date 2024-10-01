@@ -13,7 +13,7 @@ plugins {
 }
 
 tasks.dokkaHtmlMultiModule.configure {
-    outputDirectory.set(buildDir.resolve("gh-pages"))
+    outputDirectory.set(layout.buildDirectory.dir("gh-pages"))
 }
 
 allprojects {

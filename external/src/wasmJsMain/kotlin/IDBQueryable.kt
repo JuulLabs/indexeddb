@@ -1,6 +1,6 @@
 package com.juul.indexeddb.external
 
-public actual external interface IDBQueryable {
+public actual external interface IDBQueryable : JsAny {
 
     public actual fun count(): IDBRequest<JsNumber>
     public actual fun count(key: IDBKey?): IDBRequest<JsNumber>
