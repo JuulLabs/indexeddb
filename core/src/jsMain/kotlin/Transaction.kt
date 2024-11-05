@@ -8,6 +8,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import org.w3c.dom.events.Event
+import kotlin.js.Json
 
 public open class Transaction internal constructor(
     internal val transaction: IDBTransaction,
@@ -20,6 +21,26 @@ public open class Transaction internal constructor(
                 "error" -> throw ErrorEventException(event)
                 else -> Unit
             }
+        }
+    }
+
+    internal suspend fun awaitFailure() {
+        transaction.onNextEvent("complete", "abort", "error") { event ->
+            when (event.type) {
+                "abort" -> Unit
+                "error" -> Unit
+                else -> Unit
+            }
+        }
+    }
+    internal fun abort() {
+        transaction.abort()
+    }
+
+    internal fun commit() {
+        // Check if function exists before calling it.
+        if (jsTypeOf(transaction.asDynamic().commit) === "function") {
+            transaction.commit()
         }
     }
 
@@ -132,6 +153,7 @@ public open class Transaction internal constructor(
     ): Flow<T> = callbackFlow {
         var cursorStartAction = cursorStart
         val request = open(query, direction).request
+        var finished = false
         val onSuccess: (Event) -> Unit = { event ->
             @Suppress("UNCHECKED_CAST")
             val cursor = (event.target as IDBRequest<U?>).result
@@ -141,7 +163,7 @@ public open class Transaction internal constructor(
             } else if (cursor != null) {
                 val result = trySend(wrap(cursor, channel))
                 when {
-                    result.isSuccess -> if (autoContinue) cursor.`continue`()
+                    result.isSuccess -> if (autoContinue && !finished) cursor.`continue`()
                     result.isFailure -> channel.close(IllegalStateException("Send failed. Did you suspend illegally?"))
                     result.isClosed -> channel.close()
                 }
@@ -153,6 +175,7 @@ public open class Transaction internal constructor(
         request.addEventListener("success", onSuccess)
         request.addEventListener("error", onError)
         awaitClose {
+            finished = true
             request.removeEventListener("success", onSuccess)
             request.removeEventListener("error", onError)
         }
