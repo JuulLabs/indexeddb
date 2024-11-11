@@ -83,6 +83,7 @@ public class Database internal constructor(
             ensureDatabase().transaction(arrayOf(*store), "readonly", transactionOptions(durability)),
         )
         val result = transaction.action()
+        transaction.commit()
         transaction.awaitCompletion()
         result
     }
@@ -107,9 +108,16 @@ public class Database internal constructor(
                 .openKeyCursor(autoContinue = false)
                 .collect { it.close() }
         }
-        val result = transaction.action()
-        transaction.awaitCompletion()
-        result
+        try {
+            val result = transaction.action()
+            transaction.commit()
+            transaction.awaitCompletion()
+            result
+        } catch (e: Throwable) {
+            transaction.abort()
+            transaction.awaitFailure()
+            throw e
+        }
     }
 
     public fun close() {
