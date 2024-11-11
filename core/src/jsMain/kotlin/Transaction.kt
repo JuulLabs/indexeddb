@@ -8,7 +8,6 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import org.w3c.dom.events.Event
-import kotlin.js.Json
 
 public open class Transaction internal constructor(
     internal val transaction: IDBTransaction,
