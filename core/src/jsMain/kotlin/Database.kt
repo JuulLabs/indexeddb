@@ -119,6 +119,7 @@ public class Database internal constructor(
             id,
         )
         val result = transaction.action()
+        transaction.commit()
         transaction.awaitCompletion { event ->
             logger.log(Type.Transaction, event) { "Closed readonly transaction $id on database `$name`" }
         }
@@ -150,11 +151,18 @@ public class Database internal constructor(
             // Force overlapping transactions to not call `action` until prior transactions complete.
             objectStore(store.first()).awaitTransaction()
         }
-        val result = transaction.action()
-        transaction.awaitCompletion { event ->
-            logger.log(Type.Transaction, event) { "Closed readwrite transaction $id on database `$name`" }
+        try {
+            val result = transaction.action()
+            transaction.commit()
+            transaction.awaitCompletion { event ->
+                logger.log(Type.Transaction, event) { "Closed readwrite transaction $id on database `$name`" }
+            }
+            result
+        } catch (e: Throwable) {
+            transaction.abort()
+            transaction.awaitFailure()
+            throw e
         }
-        result
     }
 
     public fun close() {
