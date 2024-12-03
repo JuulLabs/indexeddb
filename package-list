@@ -3,5 +3,8 @@ $dokka.linkExtension:html
 
 module:core
 com.juul.indexeddb
+com.juul.indexeddb.logs
 module:external
 com.juul.indexeddb.external
+module:logging-khronicle
+com.juul.indexeddb.logs
