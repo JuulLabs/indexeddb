@@ -3,6 +3,9 @@ package com.juul.indexeddb
 import com.juul.indexeddb.external.IDBCursor
 import com.juul.indexeddb.external.IDBRequest
 import com.juul.indexeddb.external.IDBTransaction
+import com.juul.indexeddb.logs.Logger
+import com.juul.indexeddb.logs.NoOpLogger
+import com.juul.indexeddb.logs.Type
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -11,10 +14,14 @@ import org.w3c.dom.events.Event
 
 public open class Transaction internal constructor(
     internal val transaction: IDBTransaction,
+    internal val logger: Logger,
+    internal val transactionId: Long,
 ) {
+    internal var operationId: Int = 0
 
-    internal suspend fun awaitCompletion() {
+    internal suspend fun awaitCompletion(onComplete: ((Event) -> Unit)? = null) {
         transaction.onNextEvent("complete", "abort", "error") { event ->
+            onComplete?.invoke(event)
             when (event.type) {
                 "abort" -> throw AbortTransactionException(event)
                 "error" -> throw ErrorEventException(event)
@@ -32,7 +39,9 @@ public open class Transaction internal constructor(
             }
         }
     }
+
     internal fun abort() {
+        logger.log(Type.Transaction) { "Aborting transaction" }
         transaction.abort()
     }
 
@@ -43,28 +52,32 @@ public open class Transaction internal constructor(
         }
     }
 
+    internal suspend inline fun <T> Queryable.request(
+        functionName: String,
+        crossinline makeRequest: () -> IDBRequest<T>,
+    ): T {
+        val id = operationId++
+        logger.log(Type.Query) { "$functionName request on $type `$name` (transaction $transactionId, operation $id)" }
+        val request = makeRequest()
+        return request.onNextEvent("success", "error") { event ->
+            logger.log(Type.Query, event) {
+                "$functionName response on $type `$name` (transaction $transactionId, operation $id)"
+            }
+            when (event.type) {
+                "error" -> throw ErrorEventException(event)
+                else -> request.result
+            }
+        }
+    }
+
     public fun objectStore(name: String): ObjectStore =
         ObjectStore(transaction.objectStore(name))
 
-    public suspend fun Queryable.get(key: Key): dynamic {
-        val request = requestGet(key).request
-        return request.onNextEvent("success", "error") { event ->
-            when (event.type) {
-                "error" -> throw ErrorEventException(event)
-                else -> request.result
-            }
-        }
-    }
+    public suspend fun Queryable.get(key: Key): dynamic =
+        request("get") { requestGet(key).request }
 
-    public suspend fun Queryable.getAll(query: Key? = null): Array<dynamic> {
-        val request = requestGetAll(query).request
-        return request.onNextEvent("success", "error") { event ->
-            when (event.type) {
-                "error" -> throw ErrorEventException(event)
-                else -> request.result
-            }
-        }
-    }
+    public suspend fun Queryable.getAll(query: Key? = null): Array<dynamic> =
+        request("getAll") { requestGetAll(query).request }
 
     @Deprecated(
         "In the future, `autoContinue` will be a required parameter.",
@@ -96,12 +109,14 @@ public open class Transaction internal constructor(
         cursorStart: CursorStart? = null,
         autoContinue: Boolean,
     ): Flow<CursorWithValue> = openCursorImpl(
+        "openCursor",
         query,
         direction,
         cursorStart,
         open = this::requestOpenCursor,
         wrap = ::CursorWithValue,
         autoContinue,
+        logger,
     )
 
     @Deprecated(
@@ -134,22 +149,51 @@ public open class Transaction internal constructor(
         cursorStart: CursorStart? = null,
         autoContinue: Boolean,
     ): Flow<Cursor> = openCursorImpl(
+        "openKeyCursor",
         query,
         direction,
         cursorStart,
         open = this::requestOpenKeyCursor,
         wrap = ::Cursor,
         autoContinue,
+        logger,
     )
 
-    private suspend fun <T : Cursor, U : IDBCursor> openCursorImpl(
+    /**
+     * Opens a key cursor, then immediately close it. This has the effect of being the minimally expensive query that
+     * still waits for the transaction to be available.
+     */
+    internal suspend fun Queryable.awaitTransaction() {
+        openCursorImpl(
+            "openKeyCursor",
+            query = null,
+            direction = Cursor.Direction.Next,
+            cursorStart = null,
+            open = this::requestOpenKeyCursor,
+            wrap = ::Cursor,
+            autoContinue = false,
+            logger = NoOpLogger,
+        ).collect {
+            it.close()
+        }
+        // Since this function is an internal implementation detail, undo incrementing the operation id to avoid
+        // confusion where request 0 went.
+        operationId -= 1
+    }
+
+    private fun <T : Cursor, U : IDBCursor> Queryable.openCursorImpl(
+        functionName: String,
         query: Key?,
         direction: Cursor.Direction,
         cursorStart: CursorStart?,
         open: (Key?, Cursor.Direction) -> Request<U?>,
         wrap: (U, SendChannel<*>) -> T,
         autoContinue: Boolean,
+        logger: Logger,
     ): Flow<T> = callbackFlow {
+        val id = operationId++
+        logger.log(Type.Cursor) { "$functionName request on $type `$name` (transaction $transactionId, operation $id)" }
+
         var cursorStartAction = cursorStart
         val request = open(query, direction).request
         var finished = false
@@ -160,6 +204,9 @@ public open class Transaction internal constructor(
                 cursorStartAction?.apply(cursor)
                 cursorStartAction = null
             } else if (cursor != null) {
+                logger.log(Type.Cursor, event) {
+                    "Cursor value on $type `$name` (transaction $transactionId, operation $id)"
+                }
                 val result = trySend(wrap(cursor, channel))
                 when {
                     result.isSuccess -> if (autoContinue && !finished) cursor.`continue`()
@@ -174,21 +221,15 @@ public open class Transaction internal constructor(
         request.addEventListener("success", onSuccess)
         request.addEventListener("error", onError)
         awaitClose {
+            logger.log(Type.Cursor) { "Cursor closed on $type `$name` (transaction $transactionId, operation $id)" }
             finished = true
             request.removeEventListener("success", onSuccess)
             request.removeEventListener("error", onError)
         }
     }
 
-    public suspend fun Queryable.count(query: Key? = null): Int {
-        val request = requestCount(query).request
-        return request.onNextEvent("success", "error") { event ->
-            when (event.type) {
-                "error" -> throw ErrorEventException(event)
-                else -> request.result
-            }
-        }
-    }
+    public suspend fun Queryable.count(query: Key? = null): Int =
+        request("count") { requestCount(query).request }
 
     public fun ObjectStore.index(name: String): Index =
         Index(objectStore.index(name))
@@ -196,7 +237,9 @@ public open class Transaction internal constructor(
 
 public open class WriteTransaction internal constructor(
     transaction: IDBTransaction,
-) : Transaction(transaction) {
+    logger: Logger,
+    transactionId: Long,
+) : Transaction(transaction, logger, transactionId) {
 
     /**
      * Adds a new item to the database using an in-line or auto-incrementing key. If an item with the same
@@ -207,15 +250,8 @@ public open class WriteTransaction internal constructor(
      * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
      * doesn't mangle, prefix, or otherwise mess with your field names.
      */
-    public suspend fun ObjectStore.add(item: dynamic): dynamic {
-        val request = objectStore.add(item)
-        return request.onNextEvent("success", "error") { event ->
-            when (event.type) {
-                "error" -> throw ErrorEventException(event)
-                else -> request.result
-            }
-        }
-    }
+    public suspend fun ObjectStore.add(item: dynamic): dynamic =
+        request("add") { objectStore.add(item) }
 
     /**
      * Adds a new item to the database using an explicit out-of-line key. If an item with the same key already
@@ -226,15 +262,8 @@ public open class WriteTransaction internal constructor(
      * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
      * doesn't mangle, prefix, or otherwise mess with your field names.
      */
-    public suspend fun ObjectStore.add(item: dynamic, key: Key): dynamic {
-        val request = objectStore.add(item, key.toJs())
-        return request.onNextEvent("success", "error") { event ->
-            when (event.type) {
-                "error" -> throw ErrorEventException(event)
-                else -> request.result
-            }
-        }
-    }
+    public suspend fun ObjectStore.add(item: dynamic, key: Key): dynamic =
+        request("add") { objectStore.add(item, key.toJs()) }
 
     /**
      * Adds an item to or updates an item in the database using an in-line or auto-incrementing key. If an item
@@ -246,15 +275,8 @@ public open class WriteTransaction internal constructor(
      * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
      * doesn't mangle, prefix, or otherwise mess with your field names.
      */
-    public suspend fun ObjectStore.put(item: dynamic): dynamic {
-        val request = objectStore.put(item)
-        return request.onNextEvent("success", "error") { event ->
-            when (event.type) {
-                "error" -> throw ErrorEventException(event)
-                else -> request.result
-            }
-        }
-    }
+    public suspend fun ObjectStore.put(item: dynamic): dynamic =
+        request("put") { objectStore.put(item) }
 
     /**
      * Adds an item to or updates an item in the database using an explicit out-of-line key. If an item with the
@@ -265,34 +287,15 @@ public open class WriteTransaction internal constructor(
      * Generally, you'll want to create an explicit `external interface` and pass that in, to guarantee that Kotlin
      * doesn't mangle, prefix, or otherwise mess with your field names.
      */
-    public suspend fun ObjectStore.put(item: dynamic, key: Key): dynamic {
-        val request = objectStore.put(item, key.toJs())
-        return request.onNextEvent("success", "error") { event ->
-            when (event.type) {
-                "error" -> throw ErrorEventException(event)
-                else -> request.result
-            }
-        }
-    }
+    public suspend fun ObjectStore.put(item: dynamic, key: Key): dynamic =
+        request("put") { objectStore.put(item, key.toJs()) }
 
     public suspend fun ObjectStore.delete(key: Key) {
-        val request = objectStore.delete(key.toJs())
-        request.onNextEvent("success", "error") { event ->
-            when (event.type) {
-                "error" -> throw ErrorEventException(event)
-                else -> Unit
-            }
-        }
+        request("delete") { objectStore.delete(key.toJs()) }
     }
 
     public suspend fun ObjectStore.clear() {
-        val request = objectStore.clear()
-        request.onNextEvent("success", "error") { event ->
-            when (event.type) {
-                "error" -> throw ErrorEventException(event)
-                else -> Unit
-            }
-        }
+        request("clear") { objectStore.clear() }
     }
 
     public suspend fun CursorWithValue.delete() {
@@ -318,28 +321,40 @@ public open class WriteTransaction internal constructor(
 
 public class VersionChangeTransaction internal constructor(
     transaction: IDBTransaction,
-) : WriteTransaction(transaction) {
+    logger: Logger,
+    transactionId: Long,
+) : WriteTransaction(transaction, logger, transactionId) {
 
     /** Creates an object-store that uses explicit out-of-line keys. */
-    public fun Database.createObjectStore(name: String): ObjectStore =
-        ObjectStore(ensureDatabase().createObjectStore(name))
+    public fun Database.createObjectStore(name: String): ObjectStore {
+        logger.log(Type.Database) { "Creating object store: $name" }
+        return ObjectStore(ensureDatabase().createObjectStore(name))
+    }
 
     /** Creates an object-store that uses in-line keys. */
-    public fun Database.createObjectStore(name: String, keyPath: KeyPath): ObjectStore =
-        ObjectStore(ensureDatabase().createObjectStore(name, keyPath.toWrappedJs()))
+    public fun Database.createObjectStore(name: String, keyPath: KeyPath): ObjectStore {
+        logger.log(Type.Database) { "Creating object store: $name" }
+        return ObjectStore(ensureDatabase().createObjectStore(name, keyPath.toWrappedJs()))
+    }
 
     /** Creates an object-store that uses out-of-line keys with a key-generator. */
-    public fun Database.createObjectStore(name: String, autoIncrement: AutoIncrement): ObjectStore =
-        ObjectStore(ensureDatabase().createObjectStore(name, autoIncrement.toJs()))
+    public fun Database.createObjectStore(name: String, autoIncrement: AutoIncrement): ObjectStore {
+        logger.log(Type.Database) { "Creating object store: $name" }
+        return ObjectStore(ensureDatabase().createObjectStore(name, autoIncrement.toJs()))
+    }
 
     public fun Database.deleteObjectStore(name: String) {
+        logger.log(Type.Database) { "Deleting object store: $name" }
         ensureDatabase().deleteObjectStore(name)
     }
 
-    public fun ObjectStore.createIndex(name: String, keyPath: KeyPath, unique: Boolean): Index =
-        Index(objectStore.createIndex(name, keyPath.toUnwrappedJs(), jso { this.unique = unique }))
+    public fun ObjectStore.createIndex(name: String, keyPath: KeyPath, unique: Boolean): Index {
+        logger.log(Type.Database) { "Creating index: $name" }
+        return Index(objectStore.createIndex(name, keyPath.toUnwrappedJs(), jso { this.unique = unique }))
+    }
 
     public fun ObjectStore.deleteIndex(name: String) {
+        logger.log(Type.Database) { "Deleting index: $name" }
         objectStore.deleteIndex(name)
     }
 }
