@@ -151,7 +151,7 @@ public class Database internal constructor(
             // Force overlapping transactions to not call `action` until prior transactions complete.
             objectStore(store.first()).awaitTransaction()
         }
-        val result =  try {
+        val result = try {
             transaction.action()
         } catch (e: Throwable) {
             transaction.abort()
