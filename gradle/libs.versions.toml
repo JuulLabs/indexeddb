@@ -1,5 +1,5 @@
 [versions]
-coroutines = "1.10.1"
+coroutines = "1.10.2"
 kotlin = "2.1.20"
 
 [libraries]
