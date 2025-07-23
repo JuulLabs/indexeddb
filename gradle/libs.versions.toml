@@ -4,7 +4,7 @@ kotlin = "2.2.0"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
-khronicle-core = { module = "com.juul.khronicle:khronicle-core", version = "0.5.1" }
+khronicle-core = { module = "com.juul.khronicle:khronicle-core", version = "0.5.2" }
 
 [plugins]
 dokka = { id = "org.jetbrains.dokka", version = "2.0.0" }
