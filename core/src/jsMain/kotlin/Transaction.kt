@@ -76,8 +76,8 @@ public open class Transaction internal constructor(
     public suspend fun Queryable.get(key: Key): dynamic =
         request("get") { requestGet(key).request }
 
-    public suspend fun Queryable.getAll(query: Key? = null): Array<dynamic> =
-        request("getAll") { requestGetAll(query).request }
+    public suspend fun Queryable.getAll(query: Key? = null, count: UInt? = null): Array<dynamic> =
+        request("getAll") { requestGetAll(query, count).request }
 
     @Deprecated(
         "In the future, `autoContinue` will be a required parameter.",

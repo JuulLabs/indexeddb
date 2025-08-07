@@ -10,11 +10,11 @@ public external interface IDBQueryable {
 
     public fun getAll(): IDBRequest<dynamic>
     public fun getAll(query: dynamic): IDBRequest<dynamic>
-    public fun getAll(query: dynamic, count: Int): IDBRequest<dynamic>
+    public fun getAll(query: dynamic, count: Double): IDBRequest<dynamic>
 
     public fun getAllKeys(): IDBRequest<dynamic>
     public fun getAllKeys(query: dynamic): IDBRequest<dynamic>
-    public fun getAllKeys(query: dynamic, count: Int): IDBRequest<dynamic>
+    public fun getAllKeys(query: dynamic, count: Double): IDBRequest<dynamic>
 
     public fun getKey(key: dynamic): IDBRequest<dynamic>
 
