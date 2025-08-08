@@ -9,6 +9,10 @@ import com.juul.indexeddb.logs.NoOpLogger
 import com.juul.indexeddb.logs.Type
 import kotlinx.browser.window
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.getAndUpdate
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.w3c.dom.events.Event
 
@@ -77,11 +81,11 @@ public suspend fun deleteDatabase(
 }
 
 public class Database internal constructor(
-    database: IDBDatabase,
+    initialDatabase: IDBDatabase,
     private val logger: Logger,
 ) {
-    private val name = database.name
-    private var database: IDBDatabase? = database
+    private val name = initialDatabase.name
+    private val database = MutableStateFlow(initialDatabase as IDBDatabase?)
     internal var transactionId = 0L
 
     init {
@@ -90,12 +94,15 @@ public class Database internal constructor(
             tryClose()
         }
         // listen for database structure changes (e.g., upgradeneeded while DB is open or deleteDatabase)
-        database.addEventListener("versionchange", callback)
+        initialDatabase.addEventListener("versionchange", callback)
         // listen for force close, e.g., browser profile on a USB drive that's ejected or db deleted through dev tools
-        database.addEventListener("close", callback)
+        initialDatabase.addEventListener("close", callback)
     }
 
-    internal fun ensureDatabase(): IDBDatabase = checkNotNull(database) { "database is closed" }
+    internal fun ensureDatabase(): IDBDatabase = checkNotNull(database.value) { "database is closed" }
+
+    public val isOpen: Boolean get() = database.value != null
+    public val isOpenFlow: Flow<Boolean> = database.map { it != null }
 
     /**
      * Inside the [action] block, you must not call any `suspend` functions except for:
@@ -171,10 +178,9 @@ public class Database internal constructor(
     }
 
     private fun tryClose() {
-        val db = database
-        if (db != null) {
-            db.close()
-            database = null
+        val previous = database.getAndUpdate { null }
+        if (previous != null) {
+            previous.close()
             logger.log(Type.Database) { "Closed database `$name`" }
         } else {
             logger.log(Type.Database) { "Close skipped, database `$name` already closed" }
