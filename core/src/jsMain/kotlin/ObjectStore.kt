@@ -17,8 +17,11 @@ public class ObjectStore internal constructor(
     override fun requestGet(key: Key): Request<dynamic> =
         Request(objectStore.get(key.toJs()))
 
-    override fun requestGetAll(query: Key?): Request<Array<dynamic>> =
+    override fun requestGetAll(query: Key?, count: UInt?): Request<Array<dynamic>> = if (count == null) {
         Request(objectStore.getAll(query?.toJs()))
+    } else {
+        Request(objectStore.getAll(query?.toJs(), count.toDouble()))
+    }
 
     override fun requestOpenCursor(query: Key?, direction: Cursor.Direction): Request<IDBCursorWithValue?> =
         Request(objectStore.openCursor(query?.toJs(), direction.constant))
