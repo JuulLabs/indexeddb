@@ -7,7 +7,7 @@ coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", ve
 khronicle-core = { module = "com.juul.khronicle:khronicle-core", version = "0.5.2" }
 
 [plugins]
-dokka = { id = "org.jetbrains.dokka", version = "2.0.0" }
+dokka = { id = "org.jetbrains.dokka", version = "2.1.0" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinter = { id = "org.jmailen.kotlinter", version = "5.2.0" }
 maven-publish = { id = "com.vanniktech.maven.publish", version = "0.34.0" }
