@@ -13,7 +13,17 @@ kotlin {
         binaries.library()
     }
 
+    @Suppress("OPT_IN_USAGE")
+    wasmJs {
+        browser()
+        binaries.library()
+    }
+
     sourceSets {
+        all {
+            compilerOptions.optIn.add("kotlin.js.ExperimentalWasmJsInterop")
+        }
+
         val commonMain by getting {
             dependencies {
                 api(project(":core"))
