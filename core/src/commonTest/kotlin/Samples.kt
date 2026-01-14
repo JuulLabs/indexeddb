@@ -4,9 +4,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlin.js.JsAny
-import kotlin.js.JsNumber
-import kotlin.js.JsString
-import kotlin.js.toInt
 import kotlin.js.toJsNumber
 import kotlin.js.toJsString
 import kotlin.test.Test
@@ -15,10 +12,10 @@ import kotlin.test.assertEquals
 // This file is not a good unit test. Instead, it serves as proof of the README's usage sample.
 
 external interface JsCustomer : JsAny {
-    var ssn: JsString
-    var name: JsString
-    var age: JsNumber
-    var email: JsString
+    var ssn: String
+    var name: String
+    var age: Int
+    var email: String
 }
 
 data class Customer(
@@ -29,18 +26,18 @@ data class Customer(
 ) {
 
     constructor(js: JsCustomer) : this(
-        ssn = js.ssn.toString(),
-        name = js.name.toString(),
-        age = js.age.toInt(),
-        email = js.email.toString(),
+        ssn = js.ssn,
+        name = js.name,
+        age = js.age,
+        email = js.email,
     )
 
     fun toJs(): JsCustomer {
         val js = jso<JsCustomer>()
-        js.ssn = ssn.toJsString()
-        js.name = name.toJsString()
-        js.age = age.toJsNumber()
-        js.email = email.toJsString()
+        js.ssn = ssn
+        js.name = name
+        js.age = age
+        js.email = email
         return js
     }
 }

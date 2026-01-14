@@ -9,6 +9,8 @@ based control flow.
 ## Migration Notes
 
 In IndexedDB 0.12.0, support for Kotlin/WASM was added. This change removed all usages of `dynamic` in favor of `JsAny`.
+Often `JsAny` will be expressed via a `typealias`, such as `IDBKey`, where the alias name and documentation can provide
+additional context for expected values of that type.
 
 On Kotlin/JS, `JsAny` is a typealias for `Any` so no changes are required for _inputs_ to IndexedDB. However, _outputs_
 from IndexedDB might require casting via `asDynamic()` if you access fields on them directly. If you already defined
@@ -19,21 +21,23 @@ means that `external interface`s must extend from `JsAny` to be used as inputs o
 
 ## Usage
 
-The samples for usage here loosely follows several examples in [Using IndexedDB].
+The samples for usage here loosely follows several examples in [Using IndexedDB]. As such, we'll define our example data
+type to match.
 
-As such, we'll define our example data type to match:
+**Important:** our database type is defined as an `external interface`, which guarantees that the Kotlin compiler emits
+a plain JavaScript object for it.
 
 ```kotlin
 external interface JsCustomer : JsAny {
-    var ssn: JsString
-    var name: JsString
-    var age: JsNumber
-    var email: JsString
+    var ssn: String
+    var name: String
+    var age: Int
+    var email: String
 }
 ```
 
-Note that this can be a cumbersome interface to work with, so it often makes sense to define a data class with interop
-functions to convert between the two representations.
+Because external interfaces are missing several niceties you might expect from a `data class`, it often makes sense
+to define a data class with interop functions to convert between Kotlin-first and JS-first representations.
 
 <details>
 <summary>Click to expand</summary>
@@ -49,18 +53,18 @@ data class Customer(
 ) {
 
     constructor(js: JsCustomer) : this(
-        ssn = js.ssn.toString(),
-        name = js.name.toString(),
-        age = js.age.toInt(),
-        email = js.email.toString(),
+        ssn = js.ssn,
+        name = js.name,
+        age = js.age,
+        email = js.email,
     )
 
     fun toJs(): JsCustomer {
         val js = emptyObject<JsCustomer>()
-        js.ssn = ssn.toJsString()
-        js.name = name.toJsString()
-        js.age = age.toJsNumber()
-        js.email = email.toJsString()
+        js.ssn = ssn
+        js.name = name
+        js.age = age
+        js.email = email
         return js
     }
 }
@@ -94,11 +98,8 @@ For [keys](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Basic_
 
 Inside of an `external interface`, Kotlin will reject most types at compile time. However, some types are allowed
 by the compiler that are extremely likely to crash at runtime (such as `Long`, which compiles into the unsupported
-`bigint`). As a design pattern, using explicit JS types for these interop fields (e.g., `JsString` instead of `String`,
-`JsNumber` instead of `Int`, etc) provides an at-a-glance guarantee that types used will be understood by the database.
-
-Note that usage of incorrect types is not currently detected by this library. Type related failures are likely to
-manifest as either class cast exceptions or internal errors directly from JavaScript. 
+`bigint`). Note that usage of incorrect types is not currently detected by this library. Type related failures are
+likely to manifest as either class cast exceptions or internal errors directly from JavaScript.
 
 ### Creation & Migration
 
