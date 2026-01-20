@@ -24,11 +24,9 @@ kotlin {
             compilerOptions.optIn.add("kotlin.js.ExperimentalWasmJsInterop")
         }
 
-        val commonMain by getting {
-            dependencies {
-                api(project(":core"))
-                api(libs.khronicle.core)
-            }
+        webMain.dependencies {
+            api(project(":core"))
+            api(libs.khronicle.core)
         }
     }
 }

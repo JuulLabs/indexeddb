@@ -24,18 +24,14 @@ kotlin {
             compilerOptions.optIn.add("kotlin.js.ExperimentalWasmJsInterop")
         }
 
-        val commonMain by getting {
-            dependencies {
-                api(libs.coroutines.core)
-                api(project(":external"))
-            }
+        webMain.dependencies {
+            api(libs.coroutines.core)
+            api(project(":external"))
         }
 
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-                implementation(libs.coroutines.test)
-            }
+        webTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.coroutines.test)
         }
     }
 }
