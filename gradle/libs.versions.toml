@@ -9,5 +9,5 @@ khronicle-core = { module = "com.juul.khronicle:khronicle-core", version = "0.6.
 [plugins]
 dokka = { id = "org.jetbrains.dokka", version = "2.1.0" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-kotlinter = { id = "org.jmailen.kotlinter", version = "5.2.0" }
+kotlinter = { id = "org.jmailen.kotlinter", version = "5.3.0" }
 maven-publish = { id = "com.vanniktech.maven.publish", version = "0.36.0" }
