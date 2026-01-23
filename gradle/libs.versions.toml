@@ -1,6 +1,6 @@
 [versions]
 coroutines = "1.10.2"
-kotlin = "2.2.21"
+kotlin = "2.3.0"
 
 [libraries]
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -10,4 +10,4 @@ khronicle-core = { module = "com.juul.khronicle:khronicle-core", version = "0.6.
 dokka = { id = "org.jetbrains.dokka", version = "2.1.0" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinter = { id = "org.jmailen.kotlinter", version = "5.3.0" }
-maven-publish = { id = "com.vanniktech.maven.publish", version = "0.35.0" }
+maven-publish = { id = "com.vanniktech.maven.publish", version = "0.36.0" }
