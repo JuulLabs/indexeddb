@@ -12,4 +12,16 @@ kotlin {
         browser()
         binaries.library()
     }
+
+    @Suppress("OPT_IN_USAGE")
+    wasmJs {
+        browser()
+        binaries.library()
+    }
+
+    sourceSets {
+        all {
+            compilerOptions.optIn.add("kotlin.js.ExperimentalWasmJsInterop")
+        }
+    }
 }
