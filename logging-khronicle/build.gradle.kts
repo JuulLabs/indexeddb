@@ -13,12 +13,20 @@ kotlin {
         binaries.library()
     }
 
+    @Suppress("OPT_IN_USAGE")
+    wasmJs {
+        browser()
+        binaries.library()
+    }
+
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(project(":core"))
-                api(libs.khronicle.core)
-            }
+        all {
+            compilerOptions.optIn.add("kotlin.js.ExperimentalWasmJsInterop")
+        }
+
+        webMain.dependencies {
+            api(project(":core"))
+            api(libs.khronicle.core)
         }
     }
 }
