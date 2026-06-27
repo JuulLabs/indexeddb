@@ -9,6 +9,7 @@ public object KhronicleLogger : Logger {
     override fun log(type: Type, event: JsEvent?, message: () -> String) {
         val level = when (event?.type?.toString()) {
             "error", "blocked" -> LogLevel.Error
+
             else -> when (type) {
                 Type.Database -> LogLevel.Info
                 Type.Transaction -> LogLevel.Debug

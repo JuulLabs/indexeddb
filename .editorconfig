@@ -8,6 +8,7 @@ ktlint_standard_function-signature = disabled
 ktlint_standard_multiline-loop = disabled
 ktlint_standard_no-blank-line-in-list = disabled
 ktlint_standard_no-empty-first-line-in-class-body = disabled
+ktlint_standard_when-entry-bracing = disabled
 
 # `string-template-indent` is disabled because it depends on `multiline-expression-wrapping`.
 ktlint_standard_multiline-expression-wrapping = disabled
