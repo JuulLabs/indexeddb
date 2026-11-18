@@ -1,42 +1,39 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>com.juul.indexeddb.external</title>
-<link href="../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
+<link href="../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
+      if (storage == null) {
         const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
         if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    } else {
+      } else {
         const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
         }
-    }
+      }
     </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
 <script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async></script>
 <link href="../../styles/style.css" rel="Stylesheet">
 <link href="../../styles/main.css" rel="Stylesheet">
 <link href="../../styles/prism.css" rel="Stylesheet">
 <link href="../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../styles/font-jb-sans-auto.css" rel="Stylesheet">
 <link href="../../ui-kit/ui-kit.min.css" rel="Stylesheet">
-<script type="text/javascript" src="../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../scripts/safe-local-storage_blocking.js"></script>
 <script type="text/javascript" src="../../scripts/navigation-loader.js" async></script>
 <script type="text/javascript" src="../../scripts/platform-content-handler.js" async></script>
 <script type="text/javascript" src="../../scripts/main.js" defer></script>
 <script type="text/javascript" src="../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../ui-kit/ui-kit.min.js" defer></script>
-<script type="text/javascript" src="../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<script type="text/javascript" src="../../ui-kit/ui-kit.min.js" defer></script></head>
 <body>
-    <div class="root">
-    <nav class="navigation theme-dark" id="navigation-wrapper">
-<a class="library-name--link" href="../../index.html">
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../index.html" tabindex="1">
                     indexeddb
             </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
         </button>
@@ -44,257 +41,488 @@
         <div class="library-version" id="library-version">
         </div>
         <div class="navigation-controls">
-        <div class="filter-section filter-section_loading" id="filter-section">
-                <button class="platform-tag platform-selector js-like" data-active="" data-filter=":external:dokkaHtmlPartial/jsMain">js</button>
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true" data-filter=":external/webMain">web</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
-                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
-                    <div class="dropdown--header"><span>Platform filter</span>
-                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
                             <i class="ui-kit-icon ui-kit-icon_cross"></i>
                         </button>
                     </div>
-                        <li role="option" class="dropdown--option platform-selector-option js-like" tabindex="0">
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":external:dokkaHtmlPartial/jsMain" data-filter=":external:dokkaHtmlPartial/jsMain">
+                                <input type="checkbox" class="checkbox--input" id=":external/webMain" data-filter=":external/webMain">
                                 <span class="checkbox--icon"></span>
-                                js
+                                web
                             </label>
                         </li>
                 </ul>
                 <div class="dropdown--overlay"></div>
             </div>
-        </div>
+        </ul>
             <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
             </button>
             <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
                 API
             </div>
         </div>
-    </nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
-                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox">
-                        <div class="dropdown--header">
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
                             <span>
                                     indexeddb
                             </span>
-                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
-                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
-                            </button>
-                        </div>
-                        <div class="sidebar--inner" id="sideMenu"></div>
-                    </ul>
-                    <div class="dropdown--overlay"></div>
-                </div>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
-            <div id="main">
-<div class="main-content" data-page-type="package" id="content" pageids="external::com.juul.indexeddb.external////PointingToDeclaration//-1590404598">
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="package" id="content" pageids="external::com.juul.indexeddb.external////PointingToDeclaration//-1232859252">
   <div class="breadcrumbs"><a href="../index.html">external</a><span class="delimiter">/</span><span class="current">com.juul.indexeddb.external</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button><button class="section-tab" data-togglable="PROPERTY,EXTENSION_PROPERTY">Properties</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button><button class="section-tab" data-togglable="FUNCTION,EXTENSION_FUNCTION">Functions</button><button class="section-tab" data-togglable="PROPERTY,EXTENSION_PROPERTY">Properties</button></div>
     <div class="tabs-section-body">
       <div data-togglable="TYPE">
-        <h2 class="">Types</h2>
-        <div class="table"><a data-name="1467871066%2FClasslikes%2F-1590404598" anchor-label="IDBCursor" id="1467871066%2FClasslikes%2F-1590404598" data-filterable-set=":external:dokkaHtmlPartial/jsMain"></a>
-          <div class="table-row" data-filterable-current=":external:dokkaHtmlPartial/jsMain" data-filterable-set=":external:dokkaHtmlPartial/jsMain">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="-1616918402%2FClasslikes%2F-1232859252" anchor-label="DOMException" id="-1616918402%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-d-o-m-exception/index.html"><span><span>DOMException</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1616918402%2FClasslikes%2F-1232859252"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="-d-o-m-exception/index.html">DOMException</a><span class="token operator"> = </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-any/index.html">JsAny</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="371803270%2FClasslikes%2F-1232859252" anchor-label="DOMStringList" id="371803270%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-d-o-m-string-list/index.html"><span>DOMString</span><wbr><span><span>List</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="371803270%2FClasslikes%2F-1232859252"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-d-o-m-string-list/index.html">DOMStringList</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-any/index.html">JsAny</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1686153411%2FClasslikes%2F-1232859252" anchor-label="Event" id="-1686153411%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-event/index.html"><span><span>Event</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1686153411%2FClasslikes%2F-1232859252"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-event/index.html">Event</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-any/index.html">JsAny</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1816716884%2FClasslikes%2F-1232859252" anchor-label="EventTarget" id="-1816716884%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-event-target/index.html"><span>Event</span><wbr><span><span>Target</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1816716884%2FClasslikes%2F-1232859252"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-event-target/index.html">EventTarget</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-any/index.html">JsAny</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="993838%2FClasslikes%2F-1232859252" anchor-label="IDBAvailableDatabase" id="993838%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-d-b-available-database/index.html"><span>IDBAvailable</span><wbr><span><span>Database</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="993838%2FClasslikes%2F-1232859252"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-i-d-b-available-database/index.html">IDBAvailableDatabase</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-any/index.html">JsAny</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-663676952%2FClasslikes%2F-1232859252" anchor-label="IDBCreateIndexOptions" id="-663676952%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-d-b-create-index-options/index.html"><span>IDBCreate</span><wbr><span>Index</span><wbr><span><span>Options</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-663676952%2FClasslikes%2F-1232859252"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-i-d-b-create-index-options/index.html">IDBCreateIndexOptions</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-any/index.html">JsAny</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1050426808%2FClasslikes%2F-1232859252" anchor-label="IDBCreateObjectStoreOptions" id="1050426808%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-d-b-create-object-store-options/index.html"><span>IDBCreate</span><wbr><span>Object</span><wbr><span>Store</span><wbr><span><span>Options</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1050426808%2FClasslikes%2F-1232859252"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-i-d-b-create-object-store-options/index.html">IDBCreateObjectStoreOptions</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-any/index.html">JsAny</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1467871066%2FClasslikes%2F-1232859252" anchor-label="IDBCursor" id="1467871066%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-i-d-b-cursor/index.html"><span><span>IDBCursor</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1467871066%2FClasslikes%2F-1590404598"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1467871066%2FClasslikes%2F-1232859252"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-cursor/index.html">IDBCursor</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBCursor</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-i-d-b-cursor/index.html">IDBCursor</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-any/index.html">JsAny</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBCursor</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1542662819%2FClasslikes%2F-1590404598" anchor-label="IDBCursorWithValue" id="-1542662819%2FClasslikes%2F-1590404598" data-filterable-set=":external:dokkaHtmlPartial/jsMain"></a>
-          <div class="table-row" data-filterable-current=":external:dokkaHtmlPartial/jsMain" data-filterable-set=":external:dokkaHtmlPartial/jsMain">
+<a data-name="-879522647%2FClasslikes%2F-1232859252" anchor-label="IDBCursorDirection" id="-879522647%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-d-b-cursor-direction/index.html"><span>IDBCursor</span><wbr><span><span>Direction</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-879522647%2FClasslikes%2F-1232859252"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="-i-d-b-cursor-direction/index.html">IDBCursorDirection</a><span class="token operator"> = </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-string/index.html">JsString</a></div><div class="brief "><p class="paragraph">Must be one of <code class="lang-kotlin">"next"</code>, <code class="lang-kotlin">"nextunique"</code>, <code class="lang-kotlin">"prev"</code>, or <code class="lang-kotlin">"prevunique"</code>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1542662819%2FClasslikes%2F-1232859252" anchor-label="IDBCursorWithValue" id="-1542662819%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-i-d-b-cursor-with-value/index.html"><span>IDBCursor</span><wbr><span>With</span><wbr><span><span>Value</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1542662819%2FClasslikes%2F-1590404598"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1542662819%2FClasslikes%2F-1232859252"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-cursor-with-value/index.html">IDBCursorWithValue</a> : <a href="-i-d-b-cursor/index.html">IDBCursor</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBCursorWithValue</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-i-d-b-cursor-with-value/index.html">IDBCursorWithValue</a> : <a href="-i-d-b-cursor/index.html">IDBCursor</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBCursorWithValue</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1678458603%2FClasslikes%2F-1590404598" anchor-label="IDBDatabase" id="-1678458603%2FClasslikes%2F-1590404598" data-filterable-set=":external:dokkaHtmlPartial/jsMain"></a>
-          <div class="table-row" data-filterable-current=":external:dokkaHtmlPartial/jsMain" data-filterable-set=":external:dokkaHtmlPartial/jsMain">
+<a data-name="-1678458603%2FClasslikes%2F-1232859252" anchor-label="IDBDatabase" id="-1678458603%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-i-d-b-database/index.html"><span><span>IDBDatabase</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1678458603%2FClasslikes%2F-1590404598"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1678458603%2FClasslikes%2F-1232859252"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-database/index.html">IDBDatabase</a> : <a href="https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/events/EventTarget.html">EventTarget</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-i-d-b-database/index.html">IDBDatabase</a> : <a href="-event-target/index.html">EventTarget</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1273684856%2FClasslikes%2F-1590404598" anchor-label="IDBFactory" id="-1273684856%2FClasslikes%2F-1590404598" data-filterable-set=":external:dokkaHtmlPartial/jsMain"></a>
-          <div class="table-row" data-filterable-current=":external:dokkaHtmlPartial/jsMain" data-filterable-set=":external:dokkaHtmlPartial/jsMain">
+<a data-name="-1916825977%2FClasslikes%2F-1232859252" anchor-label="IDBDurability" id="-1916825977%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-d-b-durability/index.html"><span><span>IDBDurability</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1916825977%2FClasslikes%2F-1232859252"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="-i-d-b-durability/index.html">IDBDurability</a><span class="token operator"> = </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-string/index.html">JsString</a></div><div class="brief "><p class="paragraph">Either <code class="lang-kotlin">default</code>, <code class="lang-kotlin">strict</code>, or <code class="lang-kotlin">relaxed</code></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1273684856%2FClasslikes%2F-1232859252" anchor-label="IDBFactory" id="-1273684856%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-i-d-b-factory/index.html"><span><span>IDBFactory</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1273684856%2FClasslikes%2F-1590404598"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1273684856%2FClasslikes%2F-1232859252"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-factory/index.html">IDBFactory</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBFactory</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-i-d-b-factory/index.html">IDBFactory</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-any/index.html">JsAny</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBFactory</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-495220224%2FClasslikes%2F-1590404598" anchor-label="IDBIndex" id="-495220224%2FClasslikes%2F-1590404598" data-filterable-set=":external:dokkaHtmlPartial/jsMain"></a>
-          <div class="table-row" data-filterable-current=":external:dokkaHtmlPartial/jsMain" data-filterable-set=":external:dokkaHtmlPartial/jsMain">
+<a data-name="-495220224%2FClasslikes%2F-1232859252" anchor-label="IDBIndex" id="-495220224%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-i-d-b-index/index.html"><span><span>IDBIndex</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-495220224%2FClasslikes%2F-1590404598"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-495220224%2FClasslikes%2F-1232859252"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-index/index.html">IDBIndex</a> : <a href="-i-d-b-queryable/index.html">IDBQueryable</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBIndex</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-i-d-b-index/index.html">IDBIndex</a> : <a href="-i-d-b-queryable/index.html">IDBQueryable</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBIndex</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-309693998%2FClasslikes%2F-1590404598" anchor-label="IDBKeyRange" id="-309693998%2FClasslikes%2F-1590404598" data-filterable-set=":external:dokkaHtmlPartial/jsMain"></a>
-          <div class="table-row" data-filterable-current=":external:dokkaHtmlPartial/jsMain" data-filterable-set=":external:dokkaHtmlPartial/jsMain">
+<a data-name="509026643%2FClasslikes%2F-1232859252" anchor-label="IDBKey" id="509026643%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-d-b-key/index.html"><span><span>IDBKey</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="509026643%2FClasslikes%2F-1232859252"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="-i-d-b-key/index.html">IDBKey</a><span class="token operator"> = </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-any/index.html">JsAny</a></div><div class="brief "><p class="paragraph">Must be any of <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-string/index.html">string</a>, <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-number/index.html">number</a>, <code class="lang-kotlin">date</code>, <code class="lang-kotlin">Blob</code>, arrays of this or the previous types, or an <a href="-i-d-b-key-range/index.html">IDBKeyRange</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="403263406%2FClasslikes%2F-1232859252" anchor-label="IDBKeyPath" id="403263406%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-d-b-key-path/index.html"><span>IDBKey</span><wbr><span><span>Path</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="403263406%2FClasslikes%2F-1232859252"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="-i-d-b-key-path/index.html">IDBKeyPath</a><span class="token operator"> = </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-any/index.html">JsAny</a></div><div class="brief "><p class="paragraph">Either a <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-string/index.html">string</a> or an <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-array/index.html">array</a> of <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-string/index.html">strings</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-309693998%2FClasslikes%2F-1232859252" anchor-label="IDBKeyRange" id="-309693998%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-i-d-b-key-range/index.html"><span>IDBKey</span><wbr><span><span>Range</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-309693998%2FClasslikes%2F-1590404598"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-309693998%2FClasslikes%2F-1232859252"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-key-range/index.html">IDBKeyRange</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBKeyRange</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-i-d-b-key-range/index.html">IDBKeyRange</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-any/index.html">JsAny</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBKeyRange</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1425163056%2FClasslikes%2F-1590404598" anchor-label="IDBObjectStore" id="1425163056%2FClasslikes%2F-1590404598" data-filterable-set=":external:dokkaHtmlPartial/jsMain"></a>
-          <div class="table-row" data-filterable-current=":external:dokkaHtmlPartial/jsMain" data-filterable-set=":external:dokkaHtmlPartial/jsMain">
+<a data-name="1425163056%2FClasslikes%2F-1232859252" anchor-label="IDBObjectStore" id="1425163056%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-i-d-b-object-store/index.html"><span>IDBObject</span><wbr><span><span>Store</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1425163056%2FClasslikes%2F-1590404598"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1425163056%2FClasslikes%2F-1232859252"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-object-store/index.html">IDBObjectStore</a> : <a href="-i-d-b-queryable/index.html">IDBQueryable</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-i-d-b-object-store/index.html">IDBObjectStore</a> : <a href="-i-d-b-queryable/index.html">IDBQueryable</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1956181579%2FClasslikes%2F-1590404598" anchor-label="IDBOpenDBRequest" id="1956181579%2FClasslikes%2F-1590404598" data-filterable-set=":external:dokkaHtmlPartial/jsMain"></a>
-          <div class="table-row" data-filterable-current=":external:dokkaHtmlPartial/jsMain" data-filterable-set=":external:dokkaHtmlPartial/jsMain">
+<a data-name="1956181579%2FClasslikes%2F-1232859252" anchor-label="IDBOpenDBRequest" id="1956181579%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-i-d-b-open-d-b-request/index.html"><span>IDBOpen</span><wbr><span><span>DBRequest</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1956181579%2FClasslikes%2F-1590404598"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1956181579%2FClasslikes%2F-1232859252"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-open-d-b-request/index.html">IDBOpenDBRequest</a> : <a href="-i-d-b-request/index.html">IDBRequest</a><span class="token operator">&lt;</span><a href="-i-d-b-database/index.html">IDBDatabase</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBOpenDBRequest</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-i-d-b-open-d-b-request/index.html">IDBOpenDBRequest</a> : <a href="-i-d-b-request/index.html">IDBRequest</a><span class="token operator">&lt;</span><a href="-i-d-b-database/index.html">IDBDatabase</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBOpenDBRequest</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1092769232%2FClasslikes%2F-1590404598" anchor-label="IDBQueryable" id="-1092769232%2FClasslikes%2F-1590404598" data-filterable-set=":external:dokkaHtmlPartial/jsMain"></a>
-          <div class="table-row" data-filterable-current=":external:dokkaHtmlPartial/jsMain" data-filterable-set=":external:dokkaHtmlPartial/jsMain">
+<a data-name="-1092769232%2FClasslikes%2F-1232859252" anchor-label="IDBQueryable" id="-1092769232%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-i-d-b-queryable/index.html"><span><span>IDBQueryable</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1092769232%2FClasslikes%2F-1590404598"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1092769232%2FClasslikes%2F-1232859252"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">interface </span><a href="-i-d-b-queryable/index.html">IDBQueryable</a></div><div class="brief "><p class="paragraph">Pseudo-interface for the shared query functionality between <a href="-i-d-b-index/index.html">IDBIndex</a> and <a href="-i-d-b-object-store/index.html">IDBObjectStore</a>.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-i-d-b-queryable/index.html">IDBQueryable</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-any/index.html">JsAny</a></div><div class="brief "><p class="paragraph">Pseudo-interface for the shared query functionality between <a href="-i-d-b-index/index.html">IDBIndex</a> and <a href="-i-d-b-object-store/index.html">IDBObjectStore</a>.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1688513187%2FClasslikes%2F-1590404598" anchor-label="IDBRequest" id="1688513187%2FClasslikes%2F-1590404598" data-filterable-set=":external:dokkaHtmlPartial/jsMain"></a>
-          <div class="table-row" data-filterable-current=":external:dokkaHtmlPartial/jsMain" data-filterable-set=":external:dokkaHtmlPartial/jsMain">
+<a data-name="1688513187%2FClasslikes%2F-1232859252" anchor-label="IDBRequest" id="1688513187%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-i-d-b-request/index.html"><span><span>IDBRequest</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1688513187%2FClasslikes%2F-1590404598"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1688513187%2FClasslikes%2F-1232859252"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-request/index.html">IDBRequest</a><span class="token operator">&lt;</span><a href="-i-d-b-request/index.html">T</a><span class="token operator">&gt;</span> : <a href="https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/events/EventTarget.html">EventTarget</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBRequest</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-i-d-b-request/index.html">IDBRequest</a><span class="token operator">&lt;</span><a href="-i-d-b-request/index.html">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-any/index.html">JsAny</a><span class="token operator">?</span><span class="token operator">&gt;</span> : <a href="-event-target/index.html">EventTarget</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBRequest</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="243562676%2FClasslikes%2F-1590404598" anchor-label="IDBTransaction" id="243562676%2FClasslikes%2F-1590404598" data-filterable-set=":external:dokkaHtmlPartial/jsMain"></a>
-          <div class="table-row" data-filterable-current=":external:dokkaHtmlPartial/jsMain" data-filterable-set=":external:dokkaHtmlPartial/jsMain">
+<a data-name="243562676%2FClasslikes%2F-1232859252" anchor-label="IDBTransaction" id="243562676%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-i-d-b-transaction/index.html"><span><span>IDBTransaction</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="243562676%2FClasslikes%2F-1590404598"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="243562676%2FClasslikes%2F-1232859252"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-transaction/index.html">IDBTransaction</a> : <a href="https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/events/EventTarget.html">EventTarget</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-i-d-b-transaction/index.html">IDBTransaction</a> : <a href="-event-target/index.html">EventTarget</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="1765699294%2FClasslikes%2F-1590404598" anchor-label="IDBVersionChangeEvent" id="1765699294%2FClasslikes%2F-1590404598" data-filterable-set=":external:dokkaHtmlPartial/jsMain"></a>
-          <div class="table-row" data-filterable-current=":external:dokkaHtmlPartial/jsMain" data-filterable-set=":external:dokkaHtmlPartial/jsMain">
+<a data-name="233554641%2FClasslikes%2F-1232859252" anchor-label="IDBTransactionMode" id="233554641%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="-i-d-b-version-change-event/index.html"><span>IDBVersion</span><wbr><span>Change</span><wbr><span><span>Event</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1765699294%2FClasslikes%2F-1590404598"></span>
+                  <div><a href="-i-d-b-transaction-mode/index.html"><span>IDBTransaction</span><wbr><span><span>Mode</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="233554641%2FClasslikes%2F-1232859252"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">external </span><span class="token keyword">class </span><a href="-i-d-b-version-change-event/index.html">IDBVersionChangeEvent</a> : <a href="https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/events/Event.html">Event</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBVersionChangeEvent</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="-i-d-b-transaction-mode/index.html">IDBTransactionMode</a><span class="token operator"> = </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-string/index.html">JsString</a></div><div class="brief "><p class="paragraph">One of <code class="lang-kotlin">readonly</code>, <code class="lang-kotlin">readwrite</code>, or <code class="lang-kotlin">versionchange</code>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="823489936%2FClasslikes%2F-1232859252" anchor-label="IDBTransactionOptions" id="823489936%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-d-b-transaction-options/index.html"><span>IDBTransaction</span><wbr><span><span>Options</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="823489936%2FClasslikes%2F-1232859252"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-i-d-b-transaction-options/index.html">IDBTransactionOptions</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-any/index.html">JsAny</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-894844351%2FClasslikes%2F-1232859252" anchor-label="IDBValue" id="-894844351%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-d-b-value/index.html"><span><span>IDBValue</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-894844351%2FClasslikes%2F-1232859252"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="-i-d-b-value/index.html">IDBValue</a><span class="token operator"> = </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-any/index.html">JsAny</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Must be one of the types supported by <a href="-i-d-b-key/index.html">IDBKey</a> other than <a href="-i-d-b-key-range/index.html">IDBKeyRange</a>, or one of <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.js/-js-boolean/index.html">boolean</a>, <code class="lang-kotlin">null</code>, <code class="lang-kotlin">undefined</code>, a native javascript regex, or a plain javascript object using only <a href="-i-d-b-value/index.html">IDBValue</a> compatible values.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1765699294%2FClasslikes%2F-1232859252" anchor-label="IDBVersionChangeEvent" id="1765699294%2FClasslikes%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i-d-b-version-change-event/index.html"><span>IDBVersion</span><wbr><span>Change</span><wbr><span><span>Event</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1765699294%2FClasslikes%2F-1232859252"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="-i-d-b-version-change-event/index.html">IDBVersionChangeEvent</a> : <a href="-event/index.html">Event</a></div><div class="brief "><p class="paragraph">https://developer.mozilla.org/en-US/docs/Web/API/IDBVersionChangeEvent</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div data-togglable="EXTENSION_PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="1773245860%2FProperties%2F-1590404598" anchor-label="indexedDB" id="1773245860%2FProperties%2F-1590404598" data-filterable-set=":external:dokkaHtmlPartial/jsMain"></a>
-          <div class="table-row" data-filterable-current=":external:dokkaHtmlPartial/jsMain" data-filterable-set=":external:dokkaHtmlPartial/jsMain">
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-919357609%2FProperties%2F-1232859252" anchor-label="indexedDB" id="-919357609%2FProperties%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="indexed-d-b.html"><span>indexed</span><wbr><span><span>DB</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1773245860%2FProperties%2F-1590404598"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-919357609%2FProperties%2F-1232859252"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external:dokkaHtmlPartial/jsMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/org.w3c.dom/-window/index.html">Window</a><span class="token punctuation">.</span><a href="indexed-d-b.html">indexedDB</a><span class="token operator">: </span><a href="-i-d-b-factory/index.html">IDBFactory</a><span class="token operator">?</span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="indexed-d-b.html">indexedDB</a><span class="token operator">: </span><a href="-i-d-b-factory/index.html">IDBFactory</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="EXTENSION_FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="1688454640%2FFunctions%2F-1232859252" anchor-label="toKotlin" id="1688454640%2FFunctions%2F-1232859252" data-filterable-set=":external/webMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":external/webMain" data-filterable-set=":external/webMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="to-kotlin.html"><span>to</span><wbr><span><span>Kotlin</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1688454640%2FFunctions%2F-1232859252"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":external/webMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="-d-o-m-string-list/index.html">DOMStringList</a><span class="token punctuation">.</span><a href="to-kotlin.html"><span class="token function">toKotlin</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">&gt;</span></div></div></div>
                 </div>
               </div>
             </div>
@@ -305,17 +533,21 @@
   </div>
 </div>
     <div class="footer">
-        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
-        <span>© 2025 Copyright</span>
-        <span class="pull-right">
-            <span>Generated by </span>
-            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
-                <span>dokka</span>
-            </a>
-        </span>
-    </div>
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
             </div>
         </div>
     </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
