@@ -15,7 +15,7 @@ jobs:
           java-version: 17
       - uses: gradle/actions/setup-gradle@v6
 
-      - run: ./gradlew dokkaHtmlMultiModule
+      - run: ./gradlew :dokkaGenerateHtml
       - uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: build/gh-pages

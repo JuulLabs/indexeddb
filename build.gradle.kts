@@ -12,8 +12,16 @@ plugins {
     alias(libs.plugins.dokka)
 }
 
-tasks.dokkaHtmlMultiModule.configure {
-    outputDirectory.set(buildDir.resolve("gh-pages"))
+dokka {
+    dokkaPublications.html {
+        outputDirectory.set(layout.buildDirectory.dir("gh-pages"))
+    }
+}
+
+dependencies {
+    dokka(project(":core"))
+    dokka(project(":external"))
+    dokka(project(":logging-khronicle"))
 }
 
 allprojects {
